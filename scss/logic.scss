@@ -89,3 +89,8 @@ $cps: 0.0001;
 @function nt($a) {
     @return string.unquote("calc(1 - #{$a})");
 }
+
+//
+@function col-mix($i, $a, $b) {
+    @return color-mix(in srgb, #{$a} calc(#{$i} * 100%), #{$b});
+}

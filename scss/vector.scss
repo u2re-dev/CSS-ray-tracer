@@ -73,9 +73,9 @@ $inf: 10000;
 
 @function dot($a, $b) {
     @return calc(
-        var(--#{$a}-x, 0) * var(--#{$b}-x, 0) +
-        var(--#{$a}-y, 0) * var(--#{$b}-y, 0) +
-        var(--#{$a}-z, 0) * var(--#{$b}-z, 0)
+        (var(--#{$a}-x, 0) * var(--#{$b}-x, 0)) +
+        (var(--#{$a}-y, 0) * var(--#{$b}-y, 0)) +
+        (var(--#{$a}-z, 0) * var(--#{$b}-z, 0))
     );
 }
 
@@ -103,63 +103,44 @@ $inf: 10000;
 
 //
 @mixin sphere-intersection-logic($center, $radius, $origin, $dir, $out: 'result') {
-    // Вектор от центра сферы до начала луча
     @include minus3("oc", $origin, $center);
 
-    // Вычисляем коэффициенты квадратного уравнения
+    //
     --a: #{dot($dir, $dir)};
     --b: calc(2 * #{dot("oc", $dir)});
     --c: calc(#{dot("oc", "oc")} - (var(--radius, 0) * var(--radius, 0)));
 
-    // Дискриминант
+    //
     --disc: calc(
         (var(--b, 0) * var(--b, 0)) -
         (var(--a, 0) * var(--c, 0) * 4)
     );
 
-    // Если дискриминант >= 0, вычисляем расстояние до пересечения
-    --t1: calc(((var(--b, 0) * -1) - sqrt(var(--disc, 0))) / (2 * var(--a, 0)));
-    --t2: calc(((var(--b, 0) * -1) + sqrt(var(--disc, 0))) / (2 * var(--a, 0)));
-
-    // Выбираем ближайшее пересечение
-    --by-min: min(var(--t1, 0), var(--t2, 0));
-    --by-max: max(var(--t1, 0), var(--t2, 0));
-    --dist: #{l.mix(
-        l.land(l.ge(var(--disc, 0), 0), l.ge(var(--by-max, 0), 0)),
-        l.mix(
-            l.ge(var(--by-min, 0), 0),
-            var(--by-min, 0),
-            var(--by-max, 0)
-        )
-    , #{$inf})};
+    //
+    --t1: calc(((var(--b, 0) * -1) - sqrt(max(var(--disc, 0), 0))) / (2 * var(--a, 0)));
+    --t2: calc(((var(--b, 0) * -1) + sqrt(max(var(--disc, 0), 0))) / (2 * var(--a, 0)));
 
     //
-    #{$out}: var(--dist, #{$inf});
-    // Сохраняем результат
-    /*@include vec3($out,
-        calc(var(--#{$origin}-x) + var(--t) * var(--#{$dir}-x)),
-        calc(var(--#{$origin}-y) + var(--t) * var(--#{$dir}-y)),
-        calc(var(--#{$origin}-z) + var(--t) * var(--#{$dir}-z))
-    );*/
+    --by-min: min(var(--t1, 0), var(--t2, 0));
+    --by-max: max(var(--t1, 0), var(--t2, 0));
+    #{$out}: #{l.mix(
+        l.land(l.ge(var(--disc, 0), 0), l.gt(var(--by-max, 0), 0)),
+        l.mix(
+            l.gt(var(--by-min, 0), 0),
+            var(--by-min, 0),
+            var(--by-max, 0)
+        ),
+    #{$inf})};
 }
 
 //
 @mixin plane-intersection-logic($plane-point, $plane-normal, $origin, $dir, $out: 'result') {
-    // Вычисляем числитель: dot(plane-normal, (plane-point - origin))
     @include minus3("po", $plane-point, $origin);
     --numerator: #{dot($plane-normal, "po")};
-
-    // Вычисляем знаменатель: dot(plane-normal, dir)
     --denominator: #{dot($plane-normal, $dir)};
-
-    // Проверяем, не параллелен ли луч плоскости (denominator == 0)
     --is-parallel: #{l.eq(var(--denominator, 0), 0)};
-
-    // Если не параллелен, вычисляем t
     --t: #{l.mix(var(--is-parallel, 0), #{$inf}, calc(var(--numerator, 0) / var(--denominator, 0)))};
-
-    // Сохраняем результат в переменной
-    #{$out}: #{l.mix(l.ge(var(--t, #{$inf}), 0), var(--t, #{$inf}), #{$inf})};
+    #{$out}: #{l.mix(l.gt(var(--t, #{$inf}), 0), var(--t, #{$inf}), #{$inf})};
 }
 
 //
