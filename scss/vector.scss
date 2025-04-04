@@ -101,32 +101,37 @@ $inf: 10000;
     );
 }
 
-
+//
 @mixin sphere-intersection-logic($center, $radius, $origin, $dir, $out: 'result') {
     // Вектор от центра сферы до начала луча
     @include minus3("oc", $origin, $center);
 
-    // Квадрат радиуса сферы
-    --radius2: calc(var(--#{$radius}, 0) * var(--#{$radius}, 0));
-
     // Вычисляем коэффициенты квадратного уравнения
     --a: #{dot($dir, $dir)};
     --b: calc(2 * #{dot("oc", $dir)});
-    --c: calc(#{dot("oc", "oc")} - var(--radius2, 0));
+    --c: calc(#{dot("oc", "oc")} - (var(--radius, 0) * var(--radius, 0)));
 
     // Дискриминант
-    --disc: calc(var(--b, 0) * var(--b, 0) - 4 * var(--a, 0) * var(--c, 0));
-
-    // Проверяем, есть ли пересечение
-    --has-intersection: #{l.ge(var(--disc, 0), 0)};
+    --disc: calc(
+        (var(--b, 0) * var(--b, 0)) -
+        (var(--a, 0) * var(--c, 0) * 4)
+    );
 
     // Если дискриминант >= 0, вычисляем расстояние до пересечения
-    --sqrt-disc: sqrt(var(--disc, 0));
-    --t1: calc((-1 * var(--b, 0) - var(--sqrt-disc, 0)) / (2 * var(--a, 0)));
-    --t2: calc((-1 * var(--b, 0) + var(--sqrt-disc, 0)) / (2 * var(--a, 0)));
+    --t1: calc(((var(--b, 0) * -1) - sqrt(var(--disc, 0))) / (2 * var(--a, 0)));
+    --t2: calc(((var(--b, 0) * -1) + sqrt(var(--disc, 0))) / (2 * var(--a, 0)));
 
     // Выбираем ближайшее пересечение
-    --dist: #{l.mix(var(--has-intersection, 0), min(var(--t1, 0), var(--t2, 0)), #{$inf})};
+    --by-min: min(var(--t1, 0), var(--t2, 0));
+    --by-max: max(var(--t1, 0), var(--t2, 0));
+    --dist: #{l.mix(
+        l.land(l.ge(var(--disc, 0), 0), l.ge(var(--by-max, 0), 0)),
+        l.mix(
+            l.ge(var(--by-min, 0), 0),
+            var(--by-min, 0),
+            var(--by-max, 0)
+        )
+    , #{$inf})};
 
     //
     #{$out}: var(--dist, #{$inf});

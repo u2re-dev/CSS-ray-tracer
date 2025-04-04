@@ -6,40 +6,59 @@
 
 //
 .root {
+    $pixel-size: 2px;
+
+    //
     display: flex;
     flex-direction: column;
     box-sizing: border-box;
     will-change: transform;
+    inline-size: max-content;
+    content-visibility: auto;
+    contain-intrinsic-size: #{$pixel-size} #{$pixel-size};
+    user-select: none;
 
     //
-    * { image-rendering: pixelated; image-rendering: optimizeSpeed; gap: 0px; transform: translateZ(0px); box-sizing: border-box; line-height: 0; padding: 0; margin: 0; border: none 0px transparent; };
+    .row {
+        content-visibility: auto;
+        contain-intrinsic-size: #{$pixel-size} #{$pixel-size};
+    }
 
     //
-    .row { display: flex; flex-direction: row; inline-size: min-content; block-size: min-content; max-block-size: 1px; }
-    .pixel { display: block; inline-size: 1px; block-size: 1px; content-visibility: hidden; }
-}
+    &, * { box-sizing: border-box; line-height: 0; padding: 0; margin: 0; border: none 0px transparent; };
+    .pixel { content-visibility: hidden; will-change: color, background-color; image-rendering: pixelated; image-rendering: optimizeSpeed; gap: 0px; transform: translateZ(0px); contain-intrinsic-size: #{$pixel-size} #{$pixel-size}; };
+    * { touch-action: none; user-select: none; pointer-events: none; }
 
-//
-.root {
-    .pixel {
+    //
+    .row { display: flex; flex-direction: row; inline-size: min-content; block-size: min-content; max-block-size: #{$pixel-size}; }
+    .pixel { display: block; inline-size: #{$pixel-size}; block-size: #{$pixel-size};  }
+
+    //
+    & {
         @include v.vec3("camera-origin", 0, 0, 0);
         @include v.vec3("camera-dir", 0, 0, 1);
         @include v.vec3("camera-up", 0, -1, 0);
         @include v.vec3("camera-right", 1, 0, 0);
+    }
 
-        //
-        @include v.generate-ray(
-            "camera-origin", "camera-dir", "camera-up", "camera-right",
-            "ray-origin", "ray-dir"
-        );
-
-        //
+    & { //
         @include v.vec3("sphere-center", 0, 0, 3);
         --sphere-radius: 1;
 
         //
         @include v.vec3("plane-center", 0, -2, 0);
         @include v.vec3("plane-normal", 0, 1, 0);
+    }
+}
+
+//
+.root {
+    .pixel {
+        @include v.generate-ray(
+            "camera-origin", "camera-dir", "camera-up", "camera-right",
+            "ray-origin", "ray-dir"
+        );
+
 
         //
         --sphere-t: #{v.sphere-intersection("sphere-center", "sphere-radius", "ray-origin", "ray-dir")};
@@ -47,7 +66,7 @@
 
         //
         --t: var(--plane-t, 10000);
-        //--t: min(var(--sphere-t, 10000), var(--plane-t, 10000));
+        ///--t: min(var(--sphere-t, 10000), var(--plane-t, 10000));
         @include v.vec3("computed-origin",
             calc(var(--ray-origin-x) + var(--t) * var(--ray-dir-x)),
             calc(var(--ray-origin-y) + var(--t) * var(--ray-dir-y)),

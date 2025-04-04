@@ -51,14 +51,14 @@ $cps: 0.0001;
 }
 
 //
-@function lt($a, $b) {
-    $diff: "calc(#{$b} - #{$cps} - #{$a})";
+@function ge($a, $b) {
+    $diff: "calc(#{$a} + #{$cps} - #{$b})";
     @return string.unquote("max(#{sign($diff)}, 0)");
 }
 
 //
-@function ge($a, $b) {
-    $diff: "calc(#{$a} + #{$cps} - #{$b})";
+@function lt($a, $b) {
+    $diff: "calc(#{$b} - #{$cps} - #{$a})";
     @return string.unquote("max(#{sign($diff)}, 0)");
 }
 
@@ -67,6 +67,10 @@ $cps: 0.0001;
     $diff: "calc(#{$b} + #{$cps} - #{$a})";
     @return string.unquote("max(#{sign($diff)}, 0)");
 }
+
+
+
+
 
 //
 @function ne($a, $b) {
