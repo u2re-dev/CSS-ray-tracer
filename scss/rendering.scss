@@ -1,0 +1,67 @@
+@use "vector.scss" as v;
+@use "native.scss" as n;
+@use "logic.scss" as l;
+@use "color.scss" as c;
+
+
+//
+.root {
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    will-change: transform;
+
+    //
+    * { image-rendering: pixelated; image-rendering: optimizeSpeed; gap: 0px; transform: translateZ(0px); box-sizing: border-box; line-height: 0; padding: 0; margin: 0; border: none 0px transparent; };
+
+    //
+    .row { display: flex; flex-direction: row; inline-size: min-content; block-size: min-content; max-block-size: 1px; }
+    .pixel { display: block; inline-size: 1px; block-size: 1px; content-visibility: hidden; }
+}
+
+//
+.root {
+    .pixel {
+        @include v.vec3("camera-origin", 0, 0, 0);
+        @include v.vec3("camera-dir", 0, 0, 1);
+        @include v.vec3("camera-up", 0, -1, 0);
+        @include v.vec3("camera-right", 1, 0, 0);
+
+        //
+        @include v.generate-ray(
+            "camera-origin", "camera-dir", "camera-up", "camera-right",
+            "ray-origin", "ray-dir"
+        );
+
+        //
+        @include v.vec3("sphere-center", 0, 0, 3);
+        --sphere-radius: 1;
+
+        //
+        @include v.vec3("plane-center", 0, -2, 0);
+        @include v.vec3("plane-normal", 0, 1, 0);
+
+        //
+        --sphere-t: #{v.sphere-intersection("sphere-center", "sphere-radius", "ray-origin", "ray-dir")};
+        --plane-t: #{v.plane-intersection("plane-center", "plane-normal", "ray-origin", "ray-dir")};
+
+        //
+        --t: var(--plane-t, 10000);
+        //--t: min(var(--sphere-t, 10000), var(--plane-t, 10000));
+        @include v.vec3("computed-origin",
+            calc(var(--ray-origin-x) + var(--t) * var(--ray-dir-x)),
+            calc(var(--ray-origin-y) + var(--t) * var(--ray-dir-y)),
+            calc(var(--ray-origin-z) + var(--t) * var(--ray-dir-z))
+        );
+
+        //
+        --color: color-mix(in srgb, #{c.checkerboard("computed-origin")} calc(  #{l.land( l.eq(var(--t, 10000), var(--plane-t, 10000)) , l.lt(var(--t, 10000), 10000) ) } * 100%),  #aacffe);
+        background-color: var(--color, #711);
+
+        //background-image: url("../046.png");
+        //background-position: calc(var(--x) / var(--w) * 100%) calc(var(--y) / var(--h) * 100%);
+        //background-repeat: no-repeat;
+        //background-attachment: local;
+        /*background-color: rgb(calc(var(--x) / var(--w) * 100%) calc((1 - var(--x) / var(--w)) * 100%) 0% / 1.0);*/
+    }
+}

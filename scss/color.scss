@@ -1,0 +1,9 @@
+@use "logic.scss" as l;
+
+//
+@function checkerboard($origin) {
+    @return color-mix(in srgb, #eee  calc(#{l.ne(  mod(
+        round(var(--#{$origin}-x), 1) +
+        round(var(--#{$origin}-z), 1)
+    , 2), 0 )} * 100%),  #111);
+}

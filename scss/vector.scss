@@ -1,0 +1,231 @@
+@use "./logic.scss" as l;
+
+$inf: 10000;
+
+
+//
+@mixin declare-vec3-property($name) {
+    @property --#{$name}-x { inherits: true; syntax: "<number>"; initial-value: 0; };
+    @property --#{$name}-y { inherits: true; syntax: "<number>"; initial-value: 0; };
+    @property --#{$name}-z { inherits: true; syntax: "<number>"; initial-value: 0; };
+}
+
+//
+@property --screen-x { inherits: true; syntax: "<number>"; initial-value: 0; };
+@property --screen-y { inherits: true; syntax: "<number>"; initial-value: 0; };
+
+//
+@property --dx { inherits: true; syntax: "<number>"; initial-value: 0; };
+@property --dy { inherits: true; syntax: "<number>"; initial-value: 0; };
+
+//
+@property --x { inherits: true; syntax: "<number>"; initial-value: 0; };
+@property --y { inherits: true; syntax: "<number>"; initial-value: 0; };
+@property --w { inherits: true; syntax: "<number>"; initial-value: 1; };
+@property --h { inherits: true; syntax: "<number>"; initial-value: 1; };
+
+//
+@property --t { inherits: true; syntax: "<number>"; initial-value: #{$inf}; };
+@property --sphere-t { inherits: true; syntax: "<number>"; initial-value: #{$inf}; };
+@property --plane-t { inherits: true; syntax: "<number>"; initial-value: #{$inf}; };
+@property --sphere-radius { inherits: true; syntax: "<number>"; initial-value: 0; };
+
+//
+@property --color { inherits: true; syntax: "<color>"; initial-value: transparent; };
+
+//--sphere-t
+
+//
+@include declare-vec3-property("camera-origin");
+@include declare-vec3-property("camera-dir");
+@include declare-vec3-property("camera-up");
+@include declare-vec3-property("camera-right");
+@include declare-vec3-property("ray-origin");
+@include declare-vec3-property("ray-dir");
+
+@include declare-vec3-property("sphere-center");
+@include declare-vec3-property("plane-center");
+@include declare-vec3-property("plane-normal");
+
+@include declare-vec3-property("computed-origin");
+
+
+//
+@mixin vec3($name, $x: 0, $y: 0, $z: 0) {
+    --#{$name}-x: #{$x};
+    --#{$name}-y: #{$y};
+    --#{$name}-z: #{$z};
+}
+
+@mixin flat3($name, $s: 0) {
+    --#{$name}-x: #{$s};
+    --#{$name}-y: #{$s};
+    --#{$name}-z: #{$s};
+}
+
+@mixin cross($out, $a, $b) {
+    @include vec3($out,
+        calc(var(--#{$a}-y, 0) * var(--#{$b}-z, 0) - var(--#{$b}-y, 0) * var(--#{$a}-z, 0)),
+        calc(var(--#{$a}-z, 0) * var(--#{$b}-x, 0) - var(--#{$b}-z, 0) * var(--#{$a}-x, 0)),
+        calc(var(--#{$a}-x, 0) * var(--#{$b}-y, 0) - var(--#{$b}-x, 0) * var(--#{$a}-y, 0))
+    );
+}
+
+@function dot($a, $b) {
+    @return calc(
+        var(--#{$a}-x, 0) * var(--#{$b}-x, 0) +
+        var(--#{$a}-y, 0) * var(--#{$b}-y, 0) +
+        var(--#{$a}-z, 0) * var(--#{$b}-z, 0)
+    );
+}
+
+@mixin minus3($out, $a, $b) {
+    @include vec3($out,
+        calc(var(--#{$a}-x, 0) - var(--#{$b}-x, 0)),
+        calc(var(--#{$a}-y, 0) - var(--#{$b}-y, 0)),
+        calc(var(--#{$a}-z, 0) - var(--#{$b}-z, 0))
+    );
+}
+
+//
+@function length($a) {
+    @return #{'sqrt'}(#{dot($a, $a)});
+}
+
+//
+@mixin normalize($out, $v, $l) {
+    @include vec3($out,
+        calc(var(--#{$v}-x, 0) / #{$l}),
+        calc(var(--#{$v}-y, 0) / #{$l}),
+        calc(var(--#{$v}-z, 0) / #{$l})
+    );
+}
+
+
+@mixin sphere-intersection-logic($center, $radius, $origin, $dir, $out: 'result') {
+    // Вектор от центра сферы до начала луча
+    @include minus3("oc", $origin, $center);
+
+    // Квадрат радиуса сферы
+    --radius2: calc(var(--#{$radius}, 0) * var(--#{$radius}, 0));
+
+    // Вычисляем коэффициенты квадратного уравнения
+    --a: #{dot($dir, $dir)};
+    --b: calc(2 * #{dot("oc", $dir)});
+    --c: calc(#{dot("oc", "oc")} - var(--radius2, 0));
+
+    // Дискриминант
+    --disc: calc(var(--b, 0) * var(--b, 0) - 4 * var(--a, 0) * var(--c, 0));
+
+    // Проверяем, есть ли пересечение
+    --has-intersection: #{l.ge(var(--disc, 0), 0)};
+
+    // Если дискриминант >= 0, вычисляем расстояние до пересечения
+    --sqrt-disc: sqrt(var(--disc, 0));
+    --t1: calc((-1 * var(--b, 0) - var(--sqrt-disc, 0)) / (2 * var(--a, 0)));
+    --t2: calc((-1 * var(--b, 0) + var(--sqrt-disc, 0)) / (2 * var(--a, 0)));
+
+    // Выбираем ближайшее пересечение
+    --dist: #{l.mix(var(--has-intersection, 0), min(var(--t1, 0), var(--t2, 0)), #{$inf})};
+
+    //
+    #{$out}: var(--dist, #{$inf});
+    // Сохраняем результат
+    /*@include vec3($out,
+        calc(var(--#{$origin}-x) + var(--t) * var(--#{$dir}-x)),
+        calc(var(--#{$origin}-y) + var(--t) * var(--#{$dir}-y)),
+        calc(var(--#{$origin}-z) + var(--t) * var(--#{$dir}-z))
+    );*/
+}
+
+//
+@mixin plane-intersection-logic($plane-point, $plane-normal, $origin, $dir, $out: 'result') {
+    // Вычисляем числитель: dot(plane-normal, (plane-point - origin))
+    @include minus3("po", $plane-point, $origin);
+    --numerator: #{dot($plane-normal, "po")};
+
+    // Вычисляем знаменатель: dot(plane-normal, dir)
+    --denominator: #{dot($plane-normal, $dir)};
+
+    // Проверяем, не параллелен ли луч плоскости (denominator == 0)
+    --is-parallel: #{l.eq(var(--denominator, 0), 0)};
+
+    // Если не параллелен, вычисляем t
+    --t: #{l.mix(var(--is-parallel, 0), #{$inf}, calc(var(--numerator, 0) / var(--denominator, 0)))};
+
+    // Сохраняем результат в переменной
+    #{$out}: #{l.mix(l.ge(var(--t, #{$inf}), 0), var(--t, #{$inf}), #{$inf})};
+}
+
+//
+@function sphere-intersection($center, $radius, $origin, $dir) {
+    @return --sphere-intersection(
+        var(--#{$center}-x, 0),
+        var(--#{$center}-y, 0),
+        var(--#{$center}-z, 0),
+        var(--#{$radius}, 0),
+        var(--#{$origin}-x, 0),
+        var(--#{$origin}-y, 0),
+        var(--#{$origin}-z, 0),
+        var(--#{$dir}-x, 0),
+        var(--#{$dir}-y, 0),
+        var(--#{$dir}-z, 0)
+    );
+}
+
+//
+@function plane-intersection($center, $normal, $origin, $dir) {
+    @return --plane-intersection(
+        var(--#{$center}-x, 0),
+        var(--#{$center}-y, 0),
+        var(--#{$center}-z, 0),
+        var(--#{$normal}-x, 0),
+        var(--#{$normal}-y, 0),
+        var(--#{$normal}-z, 0),
+        var(--#{$origin}-x, 0),
+        var(--#{$origin}-y, 0),
+        var(--#{$origin}-z, 0),
+        var(--#{$dir}-x, 0),
+        var(--#{$dir}-y, 0),
+        var(--#{$dir}-z, 0)
+    );
+}
+
+//
+@mixin generate-ray($camera-origin, $camera-view-dir, $camera-up, $camera-right,   $out-ray-origin, $out-ray-dir) {
+    --dx: calc(var(--x, 0) / var(--w, 0));
+    --dy: calc(var(--y, 0) / var(--h, 0));
+
+    //
+    --screen-x: calc(var(--dx, 0) * 2 - 1);
+    --screen-y: calc(var(--dy, 0) * 2 - 1);
+
+    //
+    @include vec3("screen-offset",
+        calc(var(--screen-x, 0) * var(--#{$camera-right}-x, 0) + var(--screen-y, 0) * var(--#{$camera-up}-x, 0)),
+        calc(var(--screen-x, 0) * var(--#{$camera-right}-y, 0) + var(--screen-y, 0) * var(--#{$camera-up}-y, 0)),
+        calc(var(--screen-x, 0) * var(--#{$camera-right}-z, 0) + var(--screen-y, 0) * var(--#{$camera-up}-z, 0))
+    );
+
+    //
+    @include vec3($out-ray-dir + "-tmp",
+        calc(var(--#{$camera-view-dir}-x, 0) + var(--#{$camera-origin}-x, 0) + var(--screen-offset-x, 0)),
+        calc(var(--#{$camera-view-dir}-y, 0) + var(--#{$camera-origin}-y, 0) + var(--screen-offset-y, 0)),
+        calc(var(--#{$camera-view-dir}-z, 0) + var(--#{$camera-origin}-z, 0) + var(--screen-offset-z, 0))
+    );
+
+    //
+    @include normalize($out-ray-dir, $out-ray-dir + "-tmp", length($out-ray-dir + "-tmp"));
+    @include vec3($out-ray-origin,
+        var(--#{$camera-origin}-x, 0),
+        var(--#{$camera-origin}-y, 0),
+        var(--#{$camera-origin}-z, 0)
+    );
+}
+
+//
+@mixin sphere-normal($center, $point, $out-normal) {
+    $tmp: $point + "_tmp";
+    @include minus3($tmp, $point, $center);
+    @include normalize($out-normal, $tmp, length($tmp));
+}

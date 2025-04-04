@@ -1,0 +1,13 @@
+@use "vector.scss" as v;
+
+// low-level
+@#{'function'} --sphere-intersection(--center-x type(<number>), --center-y type(<number>), --center-z type(<number>),  --radius type(<number>), --origin-x type(<number>), --origin-y type(<number>), --origin-z type(<number>), --dir-x type(<number>), --dir-y type(<number>), --dir-z type(<number>)) returns <number>
+{
+    @include v.sphere-intersection-logic('center', 'radius', 'origin', 'dir');
+}
+
+// low-level
+@#{'function'} --plane-intersection(--center-x type(<number>), --center-y type(<number>), --center-z type(<number>),  --normal-x type(<number>), --normal-y type(<number>), --normal-z type(<number>), --origin-x type(<number>), --origin-y type(<number>), --origin-z type(<number>), --dir-x type(<number>), --dir-y type(<number>), --dir-z type(<number>)) returns <number>
+{
+    @include v.plane-intersection-logic('center', 'normal', 'origin', 'dir');
+}
