@@ -1,6 +1,6 @@
 # CSS simple ray tracer
 
-CSS math black hole, in Chrome Canary 137, with experimental flags... **pure CSS only!**
+CSS math black hole, in Chrome **135** ~~137 Canary~~ (and beyond), with experimental flags... **pure CSS only!**
 
 **Runs in browser, in runtime side!**
 
