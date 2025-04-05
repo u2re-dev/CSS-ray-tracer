@@ -1,15 +1,16 @@
-# CSS-ray-tracer
+# CSS simple ray tracer
 
-CSS math black hole, in Chrome Canary 137, with experimental flags... pure CSS only!
+CSS math black hole, in Chrome Canary 137, with experimental flags... **pure CSS only!**
 
 **Runs in browser, in runtime side!**
 
 ## Optimizations
 
 - SCSS for simplify code writing
-- JS used only for generate markup
+- JS used only for generate markup (**pixel grid**)
 - Progressive (async) markup rendering
 - Compiles into real CSS code
+- Used grid 120x120 elements
 
 ## What I used?
 
