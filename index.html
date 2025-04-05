@@ -6,11 +6,69 @@
     <title>Document</title>
     <link rel="preload" fetchpriority="high" href="scss/rendering.scss" as="style" onload="this.rel='stylesheet'"/>
 
-    <link refl="preload" href="./046.png" as="image"/>
+    <style>
+        /* styles.css */
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            font-family: Arial, sans-serif;
+            background-color: #121212;
+            color: #ffffff;
+        }
+
+        .container {
+            text-align: center;
+            max-width: 800px;
+            padding: 20px;
+        }
+
+        header h1 {
+            font-size: 3rem;
+            margin: 0;
+        }
+
+        header h2 {
+            font-size: 1.5rem;
+            margin: 10px 0;
+            color: #ff9800;
+        }
+
+        .demo {
+            margin: 20px 0;
+            display: flex;
+            place-content: center;
+            place-items: center;
+            text-align: center;
+            block-size: max-content;
+        }
+
+        footer p {
+            font-size: 0.9rem;
+            color: #bbbbbb;
+        }
+    </style>
 </head>
 <body>
 
-    <div class="root"></div>
+    <div class="container">
+        <header>
+            <h1>Ray Tracing</h1>
+            <h2>On CSS only!</h2>
+        </header>
+        <main>
+            <div class="demo">
+                <div class="root"></div>
+            </div>
+        </main>
+        <footer>
+            <p>Works on Chrome Canary (137 version or beyond), with enabled experimental web-platform features flags</p>
+        </footer>
+    </div>
+
     <script src="canvas-gen.js"></script>
 
 </body>
