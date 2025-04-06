@@ -120,8 +120,10 @@ $inf: 10000;
 
     //
     --sqrt-of-disc: sqrt(max(var(--disc, 0), 0));
-    --t1: calc((var(--b, 0) * -1) - var(--sqrt-of-disc, 0) / (2 * var(--a, 0)));
-    --t2: calc((var(--b, 0) * -1) + var(--sqrt-of-disc, 0) / (2 * var(--a, 0)));
+    --d-by-2a: var(--sqrt-of-disc, 0) / (2 * var(--a, 0));
+    --b-neg: calc(var(--b, 0) * -1);
+    --t1: calc(var(--b-neg, 0) - var(--d-by-2a, 0));
+    --t2: calc(var(--b-neg, 0) + var(--d-by-2a, 0));
 
     //
     --by-min: min(var(--t1, 0), var(--t2, 0));
