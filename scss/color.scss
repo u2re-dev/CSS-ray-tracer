@@ -7,3 +7,32 @@
         round(var(--#{$origin}-z), 1)
     , 2), 0 )} * 100%),  #111);
 }
+
+// TODO! use with CSS variables (faster rendering)
+@function light-shading-logic($light-pos, $normal, $color) {
+    // Calculate light direction vector
+    $light-dir-x: calc(var(--#{$light-pos}-x) - var(--computed-origin-x));
+    $light-dir-y: calc(var(--#{$light-pos}-y) - var(--computed-origin-y));
+    $light-dir-z: calc(var(--#{$light-pos}-z) - var(--computed-origin-z));
+
+    // Normalize light direction
+    $length: calc(sqrt(calc(
+        $light-dir-x * $light-dir-x +
+        $light-dir-y * $light-dir-y +
+        $light-dir-z * $light-dir-z)
+    ));
+
+    // Calculate dot product between normal and light direction
+    $dot-product: max(0, calc(
+        var(--#{$normal}-x) * calc($light-dir-x / $length) +
+        var(--#{$normal}-y) * calc($light-dir-y / $length) +
+        var(--#{$normal}-z) * calc($light-dir-z / $length)
+    ));
+
+    // Apply light intensity to color
+    @return color(from srgb #{$color},
+        calc(r * #{$dot-product})
+        calc(g * #{$dot-product})
+        calc(b * #{$dot-product})
+    / a);
+}

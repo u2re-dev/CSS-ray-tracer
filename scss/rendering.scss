@@ -2,8 +2,11 @@
 @use "native.scss" as n;
 @use "logic.scss" as l;
 @use "color.scss" as c;
+@use "intersection.scss" as i;
+@use "misc.scss" as m;
 @use "layout.scss";
 @use "properties.scss";
+
 
 //
 .root {
@@ -25,14 +28,14 @@
 //
 .root {
     .pixel {
-        @include v.generate-ray(
+        @include m.generate-ray(
             "camera-origin", "camera-dir", "camera-up", "camera-right",
             "ray-origin", "ray-dir"
         );
 
         //
-        --sphere-t: #{v.sphere-intersection("sphere-center", "sphere-radius", "ray-origin", "ray-dir")};
-        --plane-t : #{v.plane-intersection("plane-center", "plane-normal", "ray-origin", "ray-dir")};
+        --sphere-t: #{i.sphere-intersection("sphere-center", "sphere-radius", "ray-origin", "ray-dir")};
+        --plane-t : #{i.plane-intersection("plane-center", "plane-normal", "ray-origin", "ray-dir")};
 
         //
         --t: min(var(--sphere-t, #{v.$inf}), var(--plane-t, #{v.$inf}));

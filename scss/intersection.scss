@@ -1,0 +1,89 @@
+@use "./vector.scss" as v;
+@use "./logic.scss" as l;
+
+//
+@mixin sphere-intersection-logic($center, $radius, $origin, $dir, $out: 'result') {
+    @include v.minus3("oc", $origin, $center);
+    --radius-in-2: calc(var(--#{$radius}, 0) * var(--#{$radius}, 0));
+
+    //
+    --a: #{v.dot($dir, $dir)};
+    --b: calc(2 * #{v.dot("oc", $dir)});
+    --c: calc(#{v.dot("oc", "oc")} - var(--radius-in-2, 0));
+
+    //
+    --disc: calc(
+        (var(--b, 0) * var(--b, 0)) -
+        (var(--a, 0) * var(--c, 0) * 4)
+    );
+
+    //
+    --sqrt-of-disc: sqrt(max(var(--disc, 0), 0));
+    --d-by-2a: var(--sqrt-of-disc, 0) / (2 * var(--a, 0));
+    --b-neg: calc(var(--b, 0) * -1);
+    --t1: calc(var(--b-neg, 0) - var(--d-by-2a, 0));
+    --t2: calc(var(--b-neg, 0) + var(--d-by-2a, 0));
+
+    //
+    --by-min: min(var(--t1, 0), var(--t2, 0));
+    --by-max: max(var(--t1, 0), var(--t2, 0));
+    #{$out}: #{l.mix(
+        l.land(l.ge(var(--disc, 0), 0), l.gt(var(--by-max, 0), 0)),
+        l.mix(
+            l.gt(var(--by-min, 0), 0),
+            var(--by-min, 0),
+            var(--by-max, 0)
+        ),
+    #{v.$inf})};
+}
+
+//
+@mixin plane-intersection-logic($plane-point, $plane-normal, $origin, $dir, $out: 'result') {
+    @include v.minus3("po", $plane-point, $origin);
+    --numerator: #{v.dot($plane-normal, "po")};
+    --denominator: #{v.dot($plane-normal, $dir)};
+    --is-parallel: #{l.eq(var(--denominator, 0), 0)};
+    --t: #{l.mix(var(--is-parallel, 0), #{v.$inf}, calc(var(--numerator, 0) / var(--denominator, 0)))};
+    #{$out}: #{l.mix(l.gt(var(--t, #{v.$inf}), 0), var(--t, #{v.$inf}), #{v.$inf})};
+}
+
+//
+@function sphere-intersection($center, $radius, $origin, $dir) {
+    @return --sphere-intersection(
+        var(--#{$center}-x, 0),
+        var(--#{$center}-y, 0),
+        var(--#{$center}-z, 0),
+        var(--#{$radius}, 0),
+        var(--#{$origin}-x, 0),
+        var(--#{$origin}-y, 0),
+        var(--#{$origin}-z, 0),
+        var(--#{$dir}-x, 0),
+        var(--#{$dir}-y, 0),
+        var(--#{$dir}-z, 0)
+    );
+}
+
+//
+@function plane-intersection($center, $normal, $origin, $dir) {
+    @return --plane-intersection(
+        var(--#{$center}-x, 0),
+        var(--#{$center}-y, 0),
+        var(--#{$center}-z, 0),
+        var(--#{$normal}-x, 0),
+        var(--#{$normal}-y, 0),
+        var(--#{$normal}-z, 0),
+        var(--#{$origin}-x, 0),
+        var(--#{$origin}-y, 0),
+        var(--#{$origin}-z, 0),
+        var(--#{$dir}-x, 0),
+        var(--#{$dir}-y, 0),
+        var(--#{$dir}-z, 0)
+    );
+}
+
+//
+@mixin sphere-normal($center, $point, $out-normal) {
+    $tmp: $point + "_tmp";
+    @include v.minus3($tmp, $point, $center);
+    @include v.normalize($out-normal, $tmp, v.length($tmp));
+}
