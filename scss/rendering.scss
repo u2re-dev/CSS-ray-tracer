@@ -2,55 +2,11 @@
 @use "native.scss" as n;
 @use "logic.scss" as l;
 @use "color.scss" as c;
-
+@use "layout.scss";
 
 //
 .root {
-    $pixel-size: 2px;
-
-    //
-    transform-origin: 0px 0px;
-    scale: 1 1 1;
-
-    //
-    display: flex;
-    flex-direction: column;
-    box-sizing: border-box;
-    will-change: transform;
-    inline-size: max-content;
-    content-visibility: auto;
-    contain-intrinsic-size: #{$pixel-size} #{$pixel-size};
-    user-select: none; gap: 0px;
-
-    // enable accelerated mode
-    transform: translateZ(0px);
-    //image-rendering: pixelated;
-    //image-rendering: optimizeSpeed;
-
-    // additional optimize
-    container-type: size; isolation: isolate;
-    inline-size: calc(var(--w, 1) * $pixel-size);
-    block-size: calc(var(--h, 1) * $pixel-size);
-    contain: strict;
-
-    //
-    .row {
-        gap: 0px;
-        content-visibility: auto;
-        contain-intrinsic-size: #{$pixel-size} #{$pixel-size};
-    }
-
-    //
-    &, * { box-sizing: border-box; line-height: 0; padding: 0; margin: 0; border: none 0px transparent; };
-    .pixel { content-visibility: hidden; contain-intrinsic-size: #{$pixel-size} #{$pixel-size}; };
-    * { touch-action: none; user-select: none; pointer-events: none; }
-
-    // translateZ(0px) also enabling subpixel rendering
-    .row { transform: translateZ(0px); display: flex; flex-direction: row; inline-size: 100%; block-size: min-content; max-block-size: #{$pixel-size}; /*will-change: contents;*/ container-type: inline-size; }
-    .pixel { transform: translateZ(0px); display: block; inline-size: #{$pixel-size}; block-size: #{$pixel-size}; /*will-change: contents, color, background-color; */ }
-
-    //
-    & {
+    & { //
         @include v.vec3("camera-origin", 0, 0, 0);
         @include v.vec3("camera-dir", 0, 0.01, 1);
         @include v.vec3("camera-up", 0, -1, 0);
@@ -58,10 +14,8 @@
     }
 
     & { //
-        @include v.vec3("sphere-center", 0, 0.1, 3);
         --sphere-radius: 1;
-
-        //
+        @include v.vec3("sphere-center", 0, 0.1, 3);
         @include v.vec3("plane-center", 0, -2, 0);
         @include v.vec3("plane-normal", 0, 1, 0);
     }
@@ -75,14 +29,16 @@
             "ray-origin", "ray-dir"
         );
 
-
         //
         --sphere-t: #{v.sphere-intersection("sphere-center", "sphere-radius", "ray-origin", "ray-dir")};
         --plane-t : #{v.plane-intersection("plane-center", "plane-normal", "ray-origin", "ray-dir")};
 
         //
-        //--t: var(--plane-t, 10000);
         --t: min(var(--sphere-t, #{v.$inf}), var(--plane-t, #{v.$inf}));
+        --is-plane : #{l.eq(var(--t, #{v.$inf}), var(--plane-t , #{v.$inf}))};
+        --is-sphere: #{l.eq(var(--t, #{v.$inf}), var(--sphere-t, #{v.$inf}))};
+
+        //
         @include v.vec3("computed-origin",
             calc(var(--ray-origin-x) + var(--t) * var(--ray-dir-x)),
             calc(var(--ray-origin-y) + var(--t) * var(--ray-dir-y)),
@@ -90,18 +46,14 @@
         );
 
         //
-        --is-plane : #{l.eq(var(--t, #{v.$inf}), var(--plane-t , #{v.$inf}))};
-        --is-sphere: #{l.eq(var(--t, #{v.$inf}), var(--sphere-t, #{v.$inf}))};
-
-        //
+        --default-color: #aacffe;
         --sphere-color: #ffccaa;
         --plane-color: #{c.checkerboard("computed-origin")};
-        --default-color: #aacffe;
 
         //
         $valid-distance: l.land(
-            l.lt(var(--t, #{v.$inf}), #{v.$inf}), // t меньше бесконечности
-            l.ge(var(--t, #{v.$inf}), 0)         // t больше 0
+            l.lt(var(--t, #{v.$inf}), #{v.$inf}),
+            l.ge(var(--t, #{v.$inf}), 0)
         );
 
         //
@@ -112,19 +64,9 @@
         )};
 
         //
-        --color: #{l.col-mix( $valid-distance,
+        background-color: #{l.col-mix( $valid-distance,
             $dependent,
             var(--default-color)
         )};
-
-        //
-        //--color: color-mix(in srgb, #{c.checkerboard("computed-origin")} calc(  #{l.land( l.eq(var(--t, #{v.$inf}), var(--plane-t, #{v.$inf})) , l.land(l.lt(var(--t, #{v.$inf}), #{v.$inf}), l.gt(var(--t, #{v.$inf}), 0)) ) } * 100%),  #aacffe);
-        background-color: var(--color, #711);
-
-        //background-image: url("../046.png");
-        //background-position: calc(var(--x) / var(--w) * 100%) calc(var(--y) / var(--h) * 100%);
-        //background-repeat: no-repeat;
-        //background-attachment: local;
-        /*background-color: rgb(calc(var(--x) / var(--w) * 100%) calc((1 - var(--x) / var(--w)) * 100%) 0% / 1.0);*/
     }
 }

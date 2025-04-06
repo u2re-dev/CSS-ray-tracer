@@ -1,5 +1,6 @@
 @use "./logic.scss" as l;
 
+//
 $inf: 10000;
 
 
@@ -33,7 +34,7 @@ $inf: 10000;
 //
 @property --color { inherits: true; syntax: "<color>"; initial-value: transparent; };
 
-//--sphere-t
+
 
 //
 @include declare-vec3-property("camera-origin");
@@ -104,11 +105,12 @@ $inf: 10000;
 //
 @mixin sphere-intersection-logic($center, $radius, $origin, $dir, $out: 'result') {
     @include minus3("oc", $origin, $center);
+    --radius-in-2: calc(var(--#{$radius}, 0) * var(--#{$radius}, 0));
 
     //
     --a: #{dot($dir, $dir)};
     --b: calc(2 * #{dot("oc", $dir)});
-    --c: calc(#{dot("oc", "oc")} - (var(--radius, 0) * var(--radius, 0)));
+    --c: calc(#{dot("oc", "oc")} - var(--radius-in-2, 0));
 
     //
     --disc: calc(
@@ -117,8 +119,9 @@ $inf: 10000;
     );
 
     //
-    --t1: calc(((var(--b, 0) * -1) - sqrt(max(var(--disc, 0), 0))) / (2 * var(--a, 0)));
-    --t2: calc(((var(--b, 0) * -1) + sqrt(max(var(--disc, 0), 0))) / (2 * var(--a, 0)));
+    --sqrt-of-disc: sqrt(max(var(--disc, 0), 0));
+    --t1: calc((var(--b, 0) * -1) - var(--sqrt-of-disc, 0) / (2 * var(--a, 0)));
+    --t2: calc((var(--b, 0) * -1) + var(--sqrt-of-disc, 0) / (2 * var(--a, 0)));
 
     //
     --by-min: min(var(--t1, 0), var(--t2, 0));
