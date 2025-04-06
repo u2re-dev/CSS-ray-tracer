@@ -4,12 +4,15 @@
 //
 @mixin sphere-intersection-logic($center, $radius, $origin, $dir, $out: 'result') {
     @include v.minus3("oc", $origin, $center);
-    --radius-in-2: calc(var(--#{$radius}, 0) * var(--#{$radius}, 0));
+    --radius-in-2: calc(
+        var(--#{$radius}, 1) *
+        var(--#{$radius}, 1)
+    );
 
     //
     --a: #{v.dot($dir, $dir)};
-    --b: calc(2 * #{v.dot("oc", $dir)});
-    --c: calc(#{v.dot("oc", "oc")} - var(--radius-in-2, 0));
+    --b: calc(#{v.dot("oc", $dir)} * 2);
+    --c: calc(#{v.dot("oc", "oc")} - var(--radius-in-2, 1));
 
     //
     --disc: calc(
@@ -19,18 +22,18 @@
 
     //
     --sqrt-of-disc: sqrt(max(var(--disc, 0), 0));
-    --d-by-2a: var(--sqrt-of-disc, 0) / (2 * var(--a, 0));
-    --b-neg: calc(var(--b, 0) * -1);
-    --t1: calc(var(--b-neg, 0) - var(--d-by-2a, 0));
-    --t2: calc(var(--b-neg, 0) + var(--d-by-2a, 0));
+    --a-m-2: calc( 2 * var(--a, 0));
+    --b-neg: calc(-1 * var(--b, 0));
+    --t1: calc((var(--b-neg, 0) - var(--sqrt-of-disc, 0)) / var(--a-m-2, 0));
+    --t2: calc((var(--b-neg, 0) + var(--sqrt-of-disc, 0)) / var(--a-m-2, 0));
 
     //
     --by-min: min(var(--t1, 0), var(--t2, 0));
     --by-max: max(var(--t1, 0), var(--t2, 0));
     #{$out}: #{l.mix(
-        l.land(l.ge(var(--disc, 0), 0), l.gt(var(--by-max, 0), 0)),
+        l.land(l.ge(var(--disc, 0), 0), l.ge(var(--by-max, 0), 0)),
         l.mix(
-            l.gt(var(--by-min, 0), 0),
+            l.ge(var(--by-min, 0), 0),
             var(--by-min, 0),
             var(--by-max, 0)
         ),
@@ -82,8 +85,8 @@
 }
 
 //
-@mixin sphere-normal($center, $point, $out-normal) {
-    $tmp: $point + "_tmp";
+@mixin sphere-normal($out-normal, $center, $radius, $point) {
+    $tmp: $point + "-tmp";
     @include v.minus3($tmp, $point, $center);
-    @include v.normalize($out-normal, $tmp, v.length($tmp));
+    @include v.normalize($out-normal, $tmp, $radius);
 }

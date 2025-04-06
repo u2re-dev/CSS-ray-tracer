@@ -27,6 +27,11 @@ $inf: 10000;
 @property --sphere-t { inherits: true; syntax: "<number>"; initial-value: #{$inf}; };
 @property --plane-t { inherits: true; syntax: "<number>"; initial-value: #{$inf}; };
 @property --sphere-radius { inherits: true; syntax: "<number>"; initial-value: 0; };
+@property --sphere-center-length { inherits: true; syntax: "<number>"; initial-value: 0; };
+
+//
+@property --is-plane { inherits: true; syntax: "<number>"; initial-value: 0; };
+@property --is-sphere { inherits: true; syntax: "<number>"; initial-value: 0; };
 
 //
 @property --color { inherits: true; syntax: "<color>"; initial-value: transparent; };
@@ -39,6 +44,7 @@ $inf: 10000;
 @include declare-vec3-property("ray-origin");
 @include declare-vec3-property("ray-dir");
 
+@include declare-vec3-property("sphere-normal");
 @include declare-vec3-property("sphere-center");
 @include declare-vec3-property("plane-center");
 @include declare-vec3-property("plane-normal");

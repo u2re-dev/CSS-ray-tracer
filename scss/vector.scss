@@ -42,14 +42,14 @@ $inf: 10000;
 
 //
 @function length($a) {
-    @return #{'sqrt'}(#{dot($a, $a)});
+    @return sqrt(max(#{dot($a, $a)}, 0));
 }
 
 //
 @mixin normalize($out, $v, $l) {
     @include vec3($out,
-        calc(var(--#{$v}-x, 0) / #{$l}),
-        calc(var(--#{$v}-y, 0) / #{$l}),
-        calc(var(--#{$v}-z, 0) / #{$l})
+        clamp(-1, calc(var(--#{$v}-x, 0) / #{$l}), 1),
+        clamp(-1, calc(var(--#{$v}-y, 0) / #{$l}), 1),
+        clamp(-1, calc(var(--#{$v}-z, 0) / #{$l}), 1)
     );
 }

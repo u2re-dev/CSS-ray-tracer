@@ -1,4 +1,5 @@
 @use "logic.scss" as l;
+@use "vector.scss" as v;
 
 //
 @function checkerboard($origin) {
@@ -9,30 +10,36 @@
 }
 
 // TODO! use with CSS variables (faster rendering)
-@function light-shading-logic($light-pos, $normal, $color) {
+@mixin light-shading-logic($origin, $normal, $light-pos, $color, $out: 'result') {
     // Calculate light direction vector
-    $light-dir-x: calc(var(--#{$light-pos}-x) - var(--computed-origin-x));
-    $light-dir-y: calc(var(--#{$light-pos}-y) - var(--computed-origin-y));
-    $light-dir-z: calc(var(--#{$light-pos}-z) - var(--computed-origin-z));
+    $light-dir: "light-dir";
+    @include v.vec3($light-dir + "-tmp",
+        calc(var(--#{$light-pos}-x) - var(--#{$origin}-x)),
+        calc(var(--#{$light-pos}-y) - var(--#{$origin}-y)),
+        calc(var(--#{$light-pos}-z) - var(--#{$origin}-z))
+    );
 
     // Normalize light direction
-    $length: calc(sqrt(calc(
-        $light-dir-x * $light-dir-x +
-        $light-dir-y * $light-dir-y +
-        $light-dir-z * $light-dir-z)
-    ));
+    --length: #{v.length($light-dir + "-tmp")};
+    @include v.normalize($light-dir, $light-dir + "-tmp", var(--length, 1));
 
     // Calculate dot product between normal and light direction
-    $dot-product: max(0, calc(
-        var(--#{$normal}-x) * calc($light-dir-x / $length) +
-        var(--#{$normal}-y) * calc($light-dir-y / $length) +
-        var(--#{$normal}-z) * calc($light-dir-z / $length)
-    ));
+    --dot-product: max(0, calc(max(#{v.dot($normal, $light-dir)} * 0.9 + 0.1, 0)));
 
     // Apply light intensity to color
-    @return color(from srgb #{$color},
-        calc(r * #{$dot-product})
-        calc(g * #{$dot-product})
-        calc(b * #{$dot-product})
-    / a);
+    #{$out}: color(from #{$color} srgb
+        calc(r * clamp(0, var(--dot-product, 1), 1))
+        calc(g * clamp(0, var(--dot-product, 1), 1))
+        calc(b * clamp(0, var(--dot-product, 1), 1))
+    / 1.0);
+}
+
+//
+@function light-shading($origin, $normal, $light-pos, $color) {
+    @return --light-shading(
+        var(--#{$origin}-x), var(--#{$origin}-y), var(--#{$origin}-z),
+        var(--#{$normal}-x), var(--#{$normal}-y), var(--#{$normal}-z),
+        var(--#{$light-pos}-x), var(--#{$light-pos}-y), var(--#{$light-pos}-z),
+        #{$color}
+    );
 }
