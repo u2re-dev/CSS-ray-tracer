@@ -3,61 +3,236 @@ $inf: 10000;
 
 //
 @mixin declare-vec3-property($name) {
-    @property --#{$name}-x { inherits: true; syntax: "<number>"; initial-value: 0; };
-    @property --#{$name}-y { inherits: true; syntax: "<number>"; initial-value: 0; };
-    @property --#{$name}-z { inherits: true; syntax: "<number>"; initial-value: 0; };
+    @property --#{$name}-x {
+        inherits: true;
+        syntax: "<number>";
+        initial-value: 0;
+    }
+
+    @property --#{$name}-y {
+        inherits: true;
+        syntax: "<number>";
+        initial-value: 0;
+    }
+
+    @property --#{$name}-z {
+        inherits: true;
+        syntax: "<number>";
+        initial-value: 0;
+    }
 }
 
 //
-@property --screen-x { inherits: true; syntax: "<number>"; initial-value: 0; };
-@property --screen-y { inherits: true; syntax: "<number>"; initial-value: 0; };
+@property --screen-x {
+    inherits: true;
+    syntax: "<number>";
+    initial-value: 0;
+}
+
+@property --screen-y {
+    inherits: true;
+    syntax: "<number>";
+    initial-value: 0;
+}
 
 //
-@property --dx { inherits: true; syntax: "<number>"; initial-value: 0; };
-@property --dy { inherits: true; syntax: "<number>"; initial-value: 0; };
+@property --dx {
+    inherits: true;
+    syntax: "<number>";
+    initial-value: 0;
+}
+
+@property --dy {
+    inherits: true;
+    syntax: "<number>";
+    initial-value: 0;
+}
 
 //
-@property --x { inherits: true; syntax: "<number>"; initial-value: 0; };
-@property --y { inherits: true; syntax: "<number>"; initial-value: 0; };
-@property --w { inherits: true; syntax: "<number>"; initial-value: 1; };
-@property --h { inherits: true; syntax: "<number>"; initial-value: 1; };
+@property --x {
+    inherits: true;
+    syntax: "<number>";
+    initial-value: 0;
+}
+
+@property --y {
+    inherits: true;
+    syntax: "<number>";
+    initial-value: 0;
+}
+
+@property --w {
+    inherits: true;
+    syntax: "<number>";
+    initial-value: 1;
+}
+
+@property --h {
+    inherits: true;
+    syntax: "<number>";
+    initial-value: 1;
+}
 
 //
-@property --t { inherits: true; syntax: "<number>"; initial-value: #{$inf}; };
-@property --sphere-t { inherits: true; syntax: "<number>"; initial-value: #{$inf}; };
-@property --plane-t { inherits: true; syntax: "<number>"; initial-value: #{$inf}; };
+@property --t-0 {
+    inherits: true;
+    syntax: "<number>";
+    initial-value: #{$inf};
+}
+
+@property --sphere-t-0 {
+    inherits: true;
+    syntax: "<number>";
+    initial-value: #{$inf};
+}
+
+@property --plane-t-0 {
+    inherits: true;
+    syntax: "<number>";
+    initial-value: #{$inf};
+}
 
 //
-@property --t-1 { inherits: true; syntax: "<number>"; initial-value: #{$inf}; };
-@property --t-2 { inherits: true; syntax: "<number>"; initial-value: #{$inf}; };
-@property --sphere-t-1 { inherits: true; syntax: "<number>"; initial-value: #{$inf}; };
-@property --sphere-t-2 { inherits: true; syntax: "<number>"; initial-value: #{$inf}; };
-@property --plane-t-1 { inherits: true; syntax: "<number>"; initial-value: #{$inf}; };
-@property --plane-t-2 { inherits: true; syntax: "<number>"; initial-value: #{$inf}; };
+@property --t-1 {
+    inherits: true;
+    syntax: "<number>";
+    initial-value: #{$inf};
+}
 
-@property --sphere-radius { inherits: true; syntax: "<number>"; initial-value: 0; };
-@property --sphere-center-length { inherits: true; syntax: "<number>"; initial-value: 0; };
+@property --t-2 {
+    inherits: true;
+    syntax: "<number>";
+    initial-value: #{$inf};
+}
+
+@property --sphere-t-1 {
+    inherits: true;
+    syntax: "<number>";
+    initial-value: #{$inf};
+}
+
+@property --sphere-t-2 {
+    inherits: true;
+    syntax: "<number>";
+    initial-value: #{$inf};
+}
+
+@property --plane-t-1 {
+    inherits: true;
+    syntax: "<number>";
+    initial-value: #{$inf};
+}
+
+@property --plane-t-2 {
+    inherits: true;
+    syntax: "<number>";
+    initial-value: #{$inf};
+}
+
+@property --sphere-radius {
+    inherits: true;
+    syntax: "<number>";
+    initial-value: 0;
+}
+
+@property --sphere-center-length {
+    inherits: true;
+    syntax: "<number>";
+    initial-value: 0;
+}
 
 //
-@property --is-plane-1 { inherits: true; syntax: "<number>"; initial-value: 0; };
-@property --is-plane-2 { inherits: true; syntax: "<number>"; initial-value: 0; };
-@property --is-sphere-1 { inherits: true; syntax: "<number>"; initial-value: 0; };
-@property --is-sphere-2 { inherits: true; syntax: "<number>"; initial-value: 0; };
+@property --is-plane-1 {
+    inherits: true;
+    syntax: "<number>";
+    initial-value: 0;
+}
+
+@property --is-plane-2 {
+    inherits: true;
+    syntax: "<number>";
+    initial-value: 0;
+}
+
+@property --is-sphere-1 {
+    inherits: true;
+    syntax: "<number>";
+    initial-value: 0;
+}
+
+@property --is-sphere-2 {
+    inherits: true;
+    syntax: "<number>";
+    initial-value: 0;
+}
 
 //
-@property --color { inherits: true; syntax: "<color>"; initial-value: transparent; };
-@property --sphere-color { inherits: true; syntax: "<color>"; initial-value: transparent; };
-@property --plane-color { inherits: true; syntax: "<color>"; initial-value: transparent; };
+@property --color-0 {
+    inherits: true;
+    syntax: "<color>";
+    initial-value: transparent;
+}
+
+@property --sphere-color-0 {
+    inherits: true;
+    syntax: "<color>";
+    initial-value: transparent;
+}
+
+@property --plane-color-0 {
+    inherits: true;
+    syntax: "<color>";
+    initial-value: transparent;
+}
 
 //
-@property --color-1 { inherits: true; syntax: "<color>"; initial-value: transparent; };
-@property --color-2 { inherits: true; syntax: "<color>"; initial-value: transparent; };
-@property --it-color-1 { inherits: true; syntax: "<color>"; initial-value: transparent; };
-@property --it-color-2 { inherits: true; syntax: "<color>"; initial-value: transparent; };
-@property --plane-color-1 { inherits: true; syntax: "<color>"; initial-value: transparent; };
-@property --plane-color-2 { inherits: true; syntax: "<color>"; initial-value: transparent; };
-@property --sphere-color-1 { inherits: true; syntax: "<color>"; initial-value: transparent; };
-@property --sphere-color-2 { inherits: true; syntax: "<color>"; initial-value: transparent; };
+@property --color-1 {
+    inherits: true;
+    syntax: "<color>";
+    initial-value: transparent;
+}
+
+@property --color-2 {
+    inherits: true;
+    syntax: "<color>";
+    initial-value: transparent;
+}
+
+@property --it-color-1 {
+    inherits: true;
+    syntax: "<color>";
+    initial-value: transparent;
+}
+
+@property --it-color-2 {
+    inherits: true;
+    syntax: "<color>";
+    initial-value: transparent;
+}
+
+@property --plane-color-1 {
+    inherits: true;
+    syntax: "<color>";
+    initial-value: transparent;
+}
+
+@property --plane-color-2 {
+    inherits: true;
+    syntax: "<color>";
+    initial-value: transparent;
+}
+
+@property --sphere-color-1 {
+    inherits: true;
+    syntax: "<color>";
+    initial-value: transparent;
+}
+
+@property --sphere-color-2 {
+    inherits: true;
+    syntax: "<color>";
+    initial-value: transparent;
+}
 
 //
 @include declare-vec3-property("camera-origin");
@@ -66,10 +241,10 @@ $inf: 10000;
 @include declare-vec3-property("camera-right");
 
 //
-@include declare-vec3-property("ray-origin");
+@include declare-vec3-property("ray-origin-0");
 @include declare-vec3-property("ray-origin-1");
 @include declare-vec3-property("ray-origin-2");
-@include declare-vec3-property("ray-dir");
+@include declare-vec3-property("ray-dir-0");
 @include declare-vec3-property("ray-dir-1");
 @include declare-vec3-property("ray-dir-2");
 

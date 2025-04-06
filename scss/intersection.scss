@@ -2,12 +2,9 @@
 @use "./logic.scss" as l;
 
 //
-@mixin sphere-intersection-logic($center, $radius, $origin, $dir, $out: 'result') {
+@mixin sphere-intersection-logic($center, $radius, $origin, $dir, $out: "result") {
     @include v.minus3("oc", $origin, $center);
-    --radius-in-2: calc(
-        var(--#{$radius}, 1) *
-        var(--#{$radius}, 1)
-    );
+    --radius-in-2: calc(var(--#{$radius}, 1) * var(--#{$radius}, 1));
 
     //
     --a: #{v.dot($dir, $dir)};
@@ -15,14 +12,11 @@
     --c: calc(#{v.dot("oc", "oc")} - var(--radius-in-2, 1));
 
     //
-    --disc: calc(
-        (var(--b, 0) * var(--b, 0)) -
-        (var(--a, 0) * var(--c, 0) * 4)
-    );
+    --disc: calc((var(--b, 0) * var(--b, 0)) - (var(--a, 0) * var(--c, 0) * 4));
 
     //
     --sqrt-of-disc: sqrt(max(var(--disc, 0), 0));
-    --a-m-2: calc( 2 * var(--a, 0));
+    --a-m-2: calc(2 * var(--a, 0));
     --b-neg: calc(-1 * var(--b, 0));
     --t1: calc((var(--b-neg, 0) - var(--sqrt-of-disc, 0)) / var(--a-m-2, 0));
     --t2: calc((var(--b-neg, 0) + var(--sqrt-of-disc, 0)) / var(--a-m-2, 0));
@@ -31,17 +25,14 @@
     --by-min: min(var(--t1, 0), var(--t2, 0));
     --by-max: max(var(--t1, 0), var(--t2, 0));
     #{$out}: #{l.mix(
-        l.land(l.ge(var(--disc, 0), 0), l.ge(var(--by-max, 0), 0)),
-        calc(l.mix(
-            l.ge(var(--by-min, 0), 0),
-            var(--by-min, 0),
-            var(--by-max, 0)
-        ) - 0.001),
-    #{v.$inf})};
+            l.land(l.ge(var(--disc, 0), 0), l.ge(var(--by-max, 0), 0)),
+            calc(l.mix(l.ge(var(--by-min, 0), 0), var(--by-min, 0), var(--by-max, 0)) - 0.001),
+            #{v.$inf}
+        )};
 }
 
 //
-@mixin plane-intersection-logic($plane-point, $plane-normal, $origin, $dir, $out: 'result') {
+@mixin plane-intersection-logic($plane-point, $plane-normal, $origin, $dir, $out: "result") {
     @include v.minus3("po", $plane-point, $origin);
     --numerator: #{v.dot($plane-normal, "po")};
     --denominator: #{v.dot($plane-normal, $dir)};

@@ -3,43 +3,44 @@
 
 //
 @function checkerboard($origin) {
-    @return color-mix(in srgb, #eee  calc(#{l.ne(  mod(
-        round(var(--#{$origin}-x), 1) +
-        round(var(--#{$origin}-z), 1)
-    , 2), 0 )} * 100%),  #111);
+    @return color-mix(
+        in srgb,
+        #eee calc(#{l.ne(mod(round(var(--#{$origin}-x), 1) + round(var(--#{$origin}-z), 1), 2), 0)} * 100%),
+        #111
+    );
 }
 
-// TODO! use with CSS variables (faster rendering)
-@mixin light-shading-logic($origin, $normal, $light-pos, $color, $out: 'result') {
-    // Calculate light direction vector
+//
+@mixin light-shading-logic($origin, $normal, $light-pos, $color, $out: "result") {
     $light-dir: "light-dir";
-    @include v.vec3($light-dir + "-tmp",
+    @include v.vec3(
+        $light-dir + "-tmp",
         calc(var(--#{$light-pos}-x) - var(--#{$origin}-x)),
         calc(var(--#{$light-pos}-y) - var(--#{$origin}-y)),
         calc(var(--#{$light-pos}-z) - var(--#{$origin}-z))
     );
-
-    // Normalize light direction
     --length: #{v.length($light-dir + "-tmp")};
     @include v.normalize($light-dir, $light-dir + "-tmp", var(--length, 1));
-
-    // Calculate dot product between normal and light direction
     --dot-product: max(0, calc(max(#{v.dot($normal, $light-dir)} * 0.9 + 0.1, 0)));
-
-    // Apply light intensity to color
-    #{$out}: color(from #{$color} srgb
-        calc(r * clamp(0, var(--dot-product, 1), 1))
-        calc(g * clamp(0, var(--dot-product, 1), 1))
-        calc(b * clamp(0, var(--dot-product, 1), 1))
-    / 1.0);
+    #{$out}: color(
+        from #{$color} srgb calc(r * clamp(0, var(--dot-product, 1), 1)) calc(g * clamp(0, var(--dot-product, 1), 1)) calc(
+                b * clamp(0, var(--dot-product, 1), 1)
+            ) / 1
+    );
 }
 
 //
 @function light-shading($origin, $normal, $light-pos, $color) {
     @return --light-shading(
-        var(--#{$origin}-x), var(--#{$origin}-y), var(--#{$origin}-z),
-        var(--#{$normal}-x), var(--#{$normal}-y), var(--#{$normal}-z),
-        var(--#{$light-pos}-x), var(--#{$light-pos}-y), var(--#{$light-pos}-z),
+        var(--#{$origin}-x),
+        var(--#{$origin}-y),
+        var(--#{$origin}-z),
+        var(--#{$normal}-x),
+        var(--#{$normal}-y),
+        var(--#{$normal}-z),
+        var(--#{$light-pos}-x),
+        var(--#{$light-pos}-y),
+        var(--#{$light-pos}-z),
         #{$color}
     );
 }

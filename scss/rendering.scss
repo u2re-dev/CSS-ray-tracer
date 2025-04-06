@@ -7,126 +7,120 @@
 @use "layout.scss";
 @use "properties.scss";
 
-
 //
 .root {
-    & { //
+    & {
         @include v.vec3("camera-origin", 0, 0, 0);
         @include v.vec3("camera-dir", 0, 0.01, 1);
         @include v.vec3("camera-up", 0, -1, 0);
         @include v.vec3("camera-right", 1, 0, 0);
     }
 
-    & { //
+    & {
         --sphere-radius: 1;
         @include v.vec3("sphere-center", 0, 0.1, 3);
         @include v.vec3("plane-center", 0, -1, 0);
         @include v.vec3("plane-normal", 0, 1, 0);
         @include v.vec3("light-pos", 0, 3, 1);
     }
+
+    & {
+        --default-color: #aacffe;
+    }
+}
+
+//
+@mixin trace-ray($i) {
+    $prev-i: $i - 1;
+
+    // Intersection tests
+    --sphere-t-#{$i}: #{i.sphere-intersection(
+        "sphere-center",
+        "sphere-radius",
+        "ray-origin-#{$prev-i}",
+        "ray-dir-#{$prev-i}"
+    )};
+    --plane-t-#{$i}: #{i.plane-intersection(
+        "plane-center",
+        "plane-normal",
+        "ray-origin-#{$prev-i}",
+        "ray-dir-#{$prev-i}"
+    )};
+
+    //
+    --t-#{$i}: min(var(--sphere-t-#{$i}, #{v.$inf}), var(--plane-t-#{$i}, #{v.$inf}));
+    --is-plane-#{$i}: #{l.eq(var(--t-#{$i}, #{v.$inf}), var(--plane-t-#{$i}, #{v.$inf}))};
+    --is-sphere-#{$i}: #{l.eq(var(--t-#{$i}, #{v.$inf}), var(--sphere-t-#{$i}, #{v.$inf}))};
+    --valid-distance-#{$i}: #{l.land(
+        l.land(l.lt(var(--t-#{$i}, #{v.$inf}), #{v.$inf}), l.ge(var(--t-#{$i}, #{v.$inf}), 0)),
+        var(--valid-distance-#{$prev-i}, 1)
+    )};
+
+    //
+    @include v.compute-intersection-point("ray-origin-#{$i}", "ray-origin-#{$prev-i}", "ray-dir-#{$prev-i}", "t-#{$i}");
+    @include i.sphere-normal(
+        "sphere-normal-#{$i}",
+        "sphere-center",
+        var(--sphere-radius, 1),
+        "ray-origin-#{$i}"
+    );
+
+    //
+    @include v.mix-vec3(
+        "mixed-normal-#{$i}",
+        "is-sphere-#{$i}",
+        "sphere-normal-#{$i}",
+        "plane-normal"
+    );
+
+    //
+    @include v.reflect("ray-dir-#{$i}", "ray-dir-#{$prev-i}", "mixed-normal-#{$i}");
+
+    //
+    --default-color-#{$i}: var(--default-color);
+    --sphere-color-#{$i}: #ffccaa;
+    --plane-color-#{$i}: #{c.checkerboard("ray-origin-#{$i}")};
+
+    //
+    --surface-color-#{$i}: #{l.col-mix(var(--is-sphere-#{$i}, 0), var(--sphere-color-#{$i}, #111), var(--plane-color-#{$i}, #fff))};
+    --shaded-color-#{$i}: #{c.light-shading("ray-origin-#{$i}", "mixed-normal-#{$i}", "light-pos", var(--surface-color-#{$i}))};
+    --it-color-#{$i}: #{l.col-mix(var(--valid-distance-#{$i}, 0), var(--shaded-color-#{$i}), var(--default-color-#{$i}))};
+
+    //
+    --fresnel-#{$i}: calc(0.05 + 0.95 * clamp(0, pow(1 - abs(#{v.dot("ray-dir-#{$prev-i}", "mixed-normal-#{$prev-i}")}), 5), 1));
+    --mix-factor-#{$i}: calc(var(--valid-distance-#{$prev-i}, 0) * var(--fresnel-#{$i}, 0) * var(--mix-factor-#{$prev-i}, 0));
+
+    //
+    @if $i == 1 {
+        --color-#{$i}: var(--it-color-#{$i});
+    } @else {
+        --color-#{$i}: color-mix(
+            in srgb,
+            var(--color-#{$prev-i}) calc((1 - var(--mix-factor-#{$i}, 1)) * 100%),
+            var(--it-color-#{$i}) calc(var(--mix-factor-#{$i}, 1) * 100%)
+        );
+    }
 }
 
 //
 .root {
     .pixel {
-        @include m.generate-ray(
-            "camera-origin", "camera-dir", "camera-up", "camera-right",
-            "ray-origin", "ray-dir"
-        );
+        @include m.generate-ray("camera-origin", "camera-dir", "camera-up", "camera-right", "ray-origin-0", "ray-dir-0");
         // Initialize first ray
-        $ray-count: 1;
-        $final-color: var(--default-color);
 
         //
+        --mix-factor-0: 1;
+        --fresnel-0: 1;
         --valid-distance-0: 1;
+        --color-0: var(--default-color);
+
+        //
+        $ray-count: 2;
         @for $i from 1 through $ray-count {
-            $prev-i: $i - 1;
-
-            // Set ray origin and direction
-            @if $i == 1 {
-                // First iteration uses initial ray
-                @include v.vec3("ray-origin-#{$i}",
-                    var(--ray-origin-x),
-                    var(--ray-origin-y),
-                    var(--ray-origin-z)
-                );
-                @include v.vec3("ray-dir-#{$i}",
-                    var(--ray-dir-x),
-                    var(--ray-dir-y),
-                    var(--ray-dir-z)
-                );
-            } @else {
-                // Subsequent iterations use reflected ray
-                @include v.vec3("ray-origin-#{$i}",
-                    var(--computed-origin-#{$prev-i}-x),
-                    var(--computed-origin-#{$prev-i}-y),
-                    var(--computed-origin-#{$prev-i}-z)
-                );
-
-                // Calculate reflected direction using mixed normal
-                @include v.vec3("ray-dir-#{$i}",
-                    calc(var(--ray-dir-#{$prev-i}-x) - 2 * var(--mixed-normal-#{$prev-i}-x) * v.dot("ray-dir-#{$prev-i}", "mixed-normal-#{$prev-i}")),
-                    calc(var(--ray-dir-#{$prev-i}-y) - 2 * var(--mixed-normal-#{$prev-i}-y) * v.dot("ray-dir-#{$prev-i}", "mixed-normal-#{$prev-i}")),
-                    calc(var(--ray-dir-#{$prev-i}-z) - 2 * var(--mixed-normal-#{$prev-i}-z) * v.dot("ray-dir-#{$prev-i}", "mixed-normal-#{$prev-i}"))
-                );
-            }
-
-            // Intersection tests
-            --sphere-t-#{$i}: #{i.sphere-intersection("sphere-center", "sphere-radius", "ray-origin-#{$i}", "ray-dir-#{$i}")};
-            --plane-t-#{$i} : #{i.plane-intersection("plane-center", "plane-normal", "ray-origin-#{$i}", "ray-dir-#{$i}")};
-            --t-#{$i}: min(var(--sphere-t-#{$i}, #{v.$inf}), var(--plane-t-#{$i}, #{v.$inf}));
-
-            //
-            --is-plane-#{$i} : #{l.eq(var(--t-#{$i}, #{v.$inf}), var(--plane-t-#{$i}, #{v.$inf}))};
-            --is-sphere-#{$i}: #{l.eq(var(--t-#{$i}, #{v.$inf}), var(--sphere-t-#{$i}, #{v.$inf}))};
-
-            // Compute intersection point
-            @include v.vec3("computed-origin-#{$i}",
-                calc(var(--ray-origin-#{$i}-x) + var(--t-#{$i}) * var(--ray-dir-#{$i}-x)),
-                calc(var(--ray-origin-#{$i}-y) + var(--t-#{$i}) * var(--ray-dir-#{$i}-y)),
-                calc(var(--ray-origin-#{$i}-z) + var(--t-#{$i}) * var(--ray-dir-#{$i}-z))
-            );
-
-            // Calculate normals and colors
-            @include i.sphere-normal("sphere-normal-#{$i}", "sphere-center", var(--sphere-radius, 1), "computed-origin-#{$i}");
-            @include v.vec3("mixed-normal-#{$i}",
-                l.mix(var(--is-plane-#{$i}, 0), var(--plane-normal-x), var(--sphere-normal-#{$i}-x)),
-                l.mix(var(--is-plane-#{$i}, 0), var(--plane-normal-y), var(--sphere-normal-#{$i}-y)),
-                l.mix(var(--is-plane-#{$i}, 0), var(--plane-normal-z), var(--sphere-normal-#{$i}-z))
-            );
-
-            //
-            --default-color-#{$i}: #aacffe;
-            --sphere-color-#{$i}: #ffccaa;
-            --plane-color-#{$i}: #{c.checkerboard("computed-origin-#{$i}")};
-            --valid-distance-#{$i}: #{l.land(l.land(
-                l.lt(var(--t-#{$i}, #{v.$inf}), #{v.$inf}),
-                l.ge(var(--t-#{$i}, #{v.$inf}), 0)
-            ), var(--valid-distance-#{$prev-i}, 1))};
-
-            $dependent: //#{c.light-shading("computed-origin-#{$i}", "mixed-normal-#{$i}", "light-pos",
-                l.col-mix(
-                    var(--is-sphere-#{$i}, 0),
-                    var(--sphere-color-#{$i}, #111),
-                    var(--plane-color-#{$i}, #fff)
-                );
-            //)};
-
-            --it-color-#{$i}: #{l.col-mix(
-                var(--valid-distance-#{$i}, 0),
-                $dependent,
-                var(--default-color-#{$i})
-            )};
-
-            // Mix with previous iteration result
-            @if $i == 1 {
-                --color-#{$i}: var(--it-color-#{$i});
-            } @else {
-                --fresnel-#{$i}: calc(var(--valid-distance-#{$prev-i}, 0) * calc(0.1 + 0.9 * clamp(0, pow(1 - max(-1 * #{v.dot("ray-dir-#{$prev-i}", "mixed-normal-#{$prev-i}")}, 0), 5), 1)));
-                --color-#{$i}: color-mix(in srgb, var(--it-color-#{$i}) calc(var(--fresnel-#{$i}, 0.5) * 100%), var(--color-#{$prev-i}));
-            }
+            @include trace-ray($i);
         }
 
+        //
         background-color: var(--color-#{$ray-count}, #111);
     }
 }

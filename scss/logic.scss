@@ -15,8 +15,6 @@ $cps: 0.0001;
     @return string.unquote("sign(#{$a})");
 }
 
-
-
 //
 @function mix($i, $a, $b) {
     @return string.unquote("calc(#{$a} * #{$i} + #{$b} * calc(1 - #{$i}))");
@@ -67,10 +65,6 @@ $cps: 0.0001;
     $diff: "calc(#{$b} + #{$cps} - #{$a})";
     @return string.unquote("max(#{sign($diff)}, 0)");
 }
-
-
-
-
 
 //
 @function ne($a, $b) {
