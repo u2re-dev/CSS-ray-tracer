@@ -4,7 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <link rel="preload" fetchpriority="high" href="scss/rendering.scss" as="style" onload="this.rel='stylesheet'"/>
+    <link rel="prefetch" fetchpriority="high" href="scss/rendering.scss" as="style" onload="this.rel='stylesheet'"/>
+    <script async defer type="module" src="canvas-gen.js"></script>
+</head>
+<body>
 
     <style>
         /* styles.css */
@@ -26,16 +29,8 @@
             padding: 20px;
         }
 
-        header h1 {
-            font-size: 3rem;
-            margin: 0;
-        }
-
-        header h2 {
-            font-size: 1.5rem;
-            margin: 10px 0;
-            color: #ff1040;
-        }
+        header h1 { font-size: 3rem; margin: 0; }
+        header h2 { font-size: 1.5rem; margin: 10px 0; color: #ff1040; }
 
         .demo {
             margin: 20px 0;
@@ -51,22 +46,10 @@
             color: #bbbbbb;
         }
 
-        a {
-            color: #eee;
-            text-decoration: none;
-        }
-
-        a:hover {
-            color: #fff;
-        }
-
-        a:active {
-            color: #fff;
-            text-decoration: underline;
-        }
+        a { color: #eee; text-decoration: none; }
+        a:hover  { color: #fff; }
+        a:active { color: #fff; text-decoration: underline; }
     </style>
-</head>
-<body>
 
     <div class="container">
         <header>
@@ -83,8 +66,6 @@
             <p><a href="https://github.com/u2re-dev/CSS5-ray-tracer">Some details here</a></p>
         </footer>
     </div>
-
-    <script src="canvas-gen.js"></script>
 
 </body>
 </html>
