@@ -32,11 +32,11 @@
     --by-max: max(var(--t1, 0), var(--t2, 0));
     #{$out}: #{l.mix(
         l.land(l.ge(var(--disc, 0), 0), l.ge(var(--by-max, 0), 0)),
-        l.mix(
+        calc(l.mix(
             l.ge(var(--by-min, 0), 0),
             var(--by-min, 0),
             var(--by-max, 0)
-        ),
+        ) - 0.001),
     #{v.$inf})};
 }
 
@@ -47,7 +47,7 @@
     --denominator: #{v.dot($plane-normal, $dir)};
     --is-parallel: #{l.eq(var(--denominator, 0), 0)};
     --t: #{l.mix(var(--is-parallel, 0), #{v.$inf}, calc(var(--numerator, 0) / var(--denominator, 0)))};
-    #{$out}: #{l.mix(l.gt(var(--t, #{v.$inf}), 0), var(--t, #{v.$inf}), #{v.$inf})};
+    #{$out}: #{l.mix(l.gt(var(--t, #{v.$inf}), 0), calc(var(--t, #{v.$inf}) - 0.001), #{v.$inf})};
 }
 
 //
