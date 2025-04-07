@@ -38,8 +38,8 @@ Made before re-design of main page. In this version I'm isn't enabled any shadin
 
 ## 🌡️ Stress Test 🌡️
 
+<img width="480" src="./results/ram-madness-240x.png" alt="RAM"/>
+
 Too expensive RAM usage! And very slow rendering (roundly 1 minute to this frame)!
 
 ![SLOW](./results/max-possible-ram-madness.png)
-
-<img width="480" src="./results/ram-madness-240x.png" alt="RAM"/>
