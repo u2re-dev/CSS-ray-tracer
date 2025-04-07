@@ -8,6 +8,13 @@
     <script async defer type="module" src="canvas-gen.js"></script>
 </head>
 <body>
+    <script>
+        function copyToClipboard(text, ev) {
+            ev.preventDefault();
+            navigator.clipboard.writeText(text).then(() => {
+            }).catch(console.warn.bind(console));
+        }
+    </script>
 
     <style>
         /* styles.css */
@@ -63,7 +70,9 @@
         </main>
         <footer>
             <p>Works on Chrome (135 version or beyond), with enabled experimental web-platform features flags</p>
-            <p><a href="https://github.com/u2re-dev/CSS5-ray-tracer">Some details here</a></p>
+            <p>Also, you can donate for us (Ethereum): <a href="#0x102E317665bBa4B4D2e2317Bf3c48F83FC13F4ec" onclick="(ev)=>copyToClipboard('0x102E317665bBa4B4D2e2317Bf3c48F83FC13F4ec', ev)">0x102E317665bBa4B4D2e2317Bf3c48F83FC13F4ec</a></p>
+            <p><a href="https://github.com/u2re-dev/CSS5-ray-tracer">Some details here (Github source code)</a></p>
+            <img width="160" src="./qr/ethereum.png" alt="ETH"/>
         </footer>
     </div>
 
