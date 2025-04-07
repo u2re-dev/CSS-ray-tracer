@@ -35,112 +35,123 @@
 
     // Potentially optimized?
     // Intersection tests
-    --sphere-t-#{$i}: if(style(--valid-distance-#{$prev-i}: 1):
-        #{i.sphere-intersection(
-            "sphere-center",
-            "sphere-radius",
-            "ray-origin-#{$prev-i}",
-            "ray-dir-#{$prev-i}"
-        )};
-        else: #{v.$inf});
+    & {
+        --sphere-t-#{$i}: if(style(--valid-distance-#{$prev-i}: 1):
+            #{i.sphere-intersection(
+                "sphere-center",
+                "sphere-radius",
+                "ray-origin-#{$prev-i}",
+                "ray-dir-#{$prev-i}"
+            )};
+            else: #{v.$inf});
 
-    --plane-t-#{$i}: if(style(--valid-distance-#{$prev-i}: 1):
-        #{i.plane-intersection(
-            "plane-center",
-            "plane-normal",
-            "ray-origin-#{$prev-i}",
-            "ray-dir-#{$prev-i}"
-        )};
-        else: #{v.$inf});
+        --plane-t-#{$i}: if(style(--valid-distance-#{$prev-i}: 1):
+            #{i.plane-intersection(
+                "plane-center",
+                "plane-normal",
+                "ray-origin-#{$prev-i}",
+                "ray-dir-#{$prev-i}"
+            )};
+            else: #{v.$inf});
+    }
 
 /*
-    // Intersection tests
-    --sphere-t-#{$i}:
-        #{i.sphere-intersection(
+    & {
+        // Intersection tests
+        --sphere-t-#{$i}: #{i.sphere-intersection(
             "sphere-center",
             "sphere-radius",
             "ray-origin-#{$prev-i}",
             "ray-dir-#{$prev-i}"
         )};
 
-    --plane-t-#{$i}:
-        #{i.plane-intersection(
+        --plane-t-#{$i}: #{i.plane-intersection(
             "plane-center",
             "plane-normal",
             "ray-origin-#{$prev-i}",
             "ray-dir-#{$prev-i}"
         )};
+    }
 */
 
-    //
-    --t-#{$i}: min(var(--sphere-t-#{$i}, #{v.$inf}), var(--plane-t-#{$i}, #{v.$inf}));
-    --is-plane-#{$i}: #{l.eq(var(--t-#{$i}, #{v.$inf}), var(--plane-t-#{$i}, #{v.$inf}))};
-    --is-sphere-#{$i}: #{l.eq(var(--t-#{$i}, #{v.$inf}), var(--sphere-t-#{$i}, #{v.$inf}))};
-    --valid-distance-#{$i}: #{l.land(
-        l.land(l.lt(var(--t-#{$i}, #{v.$inf}), #{v.$inf}), l.ge(var(--t-#{$i}, #{v.$inf}), 0)),
-        var(--valid-distance-#{$prev-i}, 1)
-    )};
+    & {
+        --t-#{$i}: min(var(--sphere-t-#{$i}, #{v.$inf}), var(--plane-t-#{$i}, #{v.$inf}));
+        --is-plane-#{$i}: #{l.eq(var(--t-#{$i}, #{v.$inf}), var(--plane-t-#{$i}, #{v.$inf}))};
+        --is-sphere-#{$i}: #{l.eq(var(--t-#{$i}, #{v.$inf}), var(--sphere-t-#{$i}, #{v.$inf}))};
+        --valid-distance-#{$i}: #{l.land(
+            l.land(l.lt(var(--t-#{$i}, #{v.$inf}), #{v.$inf}), l.ge(var(--t-#{$i}, #{v.$inf}), 0)),
+            var(--valid-distance-#{$prev-i}, 1)
+        )};
+    }
 
     //
-    @include v.compute-intersection-point("ray-origin-#{$i}", "ray-origin-#{$prev-i}", "ray-dir-#{$prev-i}", "t-#{$i}");
-    @include i.sphere-normal(
-        "sphere-normal-#{$i}",
-        "sphere-center",
-        var(--sphere-radius, 1),
-        "ray-origin-#{$i}"
-    );
-
-    //
-    @include v.mix-vec3(
-        "mixed-normal-#{$i}",
-        "is-sphere-#{$i}",
-        "sphere-normal-#{$i}",
-        "plane-normal"
-    );
-
-    //
-    @include v.reflect("ray-dir-#{$i}", "ray-dir-#{$prev-i}", "mixed-normal-#{$i}");
-
-    //
-    --default-color-#{$i}: var(--default-color);
-    --sphere-color-#{$i}: #ffccaa;
-
-    //
-    //--plane-color-#{$i}: #{c.checkerboard("ray-origin-#{$i}")};
-    --plane-color-#{$i}: if(style(--is-plane-#{$i}: 1): #{c.checkerboard("ray-origin-#{$i}")}; else: #111);
-
-    //
-    --surface-color-#{$i}: #{l.col-mix(var(--is-sphere-#{$i}, 0), var(--sphere-color-#{$i}, #111), var(--plane-color-#{$i}, #fff))};
-    --shaded-color-#{$i}: #{c.light-shading("ray-origin-#{$i}", "mixed-normal-#{$i}", "light-pos", var(--surface-color-#{$i}))};
-    --it-color-#{$i}: #{l.col-mix(var(--valid-distance-#{$i}, 0), var(--shaded-color-#{$i}), var(--default-color-#{$i}))};
-
-    //
-    --fresnel-#{$i}: calc(0.05 + 0.95 * clamp(0, pow(1 - abs(#{v.dot("ray-dir-#{$prev-i}", "mixed-normal-#{$prev-i}")}), 5), 1));
-    --mix-factor-#{$i}: calc(var(--valid-distance-#{$prev-i}, 0) * var(--fresnel-#{$i}, 0) * var(--mix-factor-#{$prev-i}, 0));
-
-    //
-    @if $i == 1 {
-        --color-#{$i}: var(--it-color-#{$i});
-    } @else {
-        --color-#{$i}: color-mix(
-            in srgb,
-            var(--color-#{$prev-i}) calc((1 - var(--mix-factor-#{$i}, 1)) * 100%),
-            var(--it-color-#{$i}) calc(var(--mix-factor-#{$i}, 1) * 100%)
+    & {
+        @include v.compute-intersection-point("ray-origin-#{$i}", "ray-origin-#{$prev-i}", "ray-dir-#{$prev-i}", "t-#{$i}");
+        @include i.sphere-normal(
+            "sphere-normal-#{$i}",
+            "sphere-center",
+            var(--sphere-radius, 1),
+            "ray-origin-#{$i}"
         );
+
+        //
+        @include v.mix-vec3(
+            "mixed-normal-#{$i}",
+            "is-sphere-#{$i}",
+            "sphere-normal-#{$i}",
+            "plane-normal"
+        );
+
+        //
+        @include v.reflect("ray-dir-#{$i}", "ray-dir-#{$prev-i}", "mixed-normal-#{$i}");
+    }
+
+    //
+    & {
+        --plane-color-#{$i}: if(style(--is-plane-#{$i}: 1): #{c.checkerboard("ray-origin-#{$i}")}; else: #111);
+    }
+
+    //
+    & {
+        --default-color-#{$i}: var(--default-color);
+        --sphere-color-#{$i}: #ffccaa;
+
+        //
+        --surface-color-#{$i}: #{l.col-mix(var(--is-sphere-#{$i}, 0), var(--sphere-color-#{$i}, #111), var(--plane-color-#{$i}, #fff))};
+        --shaded-color-#{$i}: #{c.light-shading("ray-origin-#{$i}", "mixed-normal-#{$i}", "light-pos", var(--surface-color-#{$i}))};
+        --it-color-#{$i}: #{l.col-mix(var(--valid-distance-#{$i}, 0), var(--shaded-color-#{$i}), var(--default-color-#{$i}))};
+
+        //
+        --fresnel-#{$i}: calc(0.05 + 0.95 * clamp(0, pow(1 - abs(#{v.dot("ray-dir-#{$prev-i}", "mixed-normal-#{$prev-i}")}), 5), 1));
+        --mix-factor-#{$i}: calc(var(--valid-distance-#{$prev-i}, 0) * var(--fresnel-#{$i}, 0) * var(--mix-factor-#{$prev-i}, 0));
+
+        //
+        @if $i == 1 {
+            --color-#{$i}: var(--it-color-#{$i});
+        } @else {
+            --color-#{$i}: color-mix(
+                in srgb,
+                var(--color-#{$prev-i}) calc((1 - var(--mix-factor-#{$i}, 1)) * 100%),
+                var(--it-color-#{$i}) calc(var(--mix-factor-#{$i}, 1) * 100%)
+            );
+        }
     }
 }
 
 //
 .root {
     .pixel {
-        @include m.generate-ray("camera-origin", "camera-dir", "camera-up", "camera-right", "ray-origin-0", "ray-dir-0");
-        // Initialize first ray
+        & {
+            @include m.generate-ray("camera-origin", "camera-dir", "camera-up", "camera-right", "ray-origin-0", "ray-dir-0");
+        }
 
         //
-        --mix-factor-0: 1;
-        --fresnel-0: 1;
-        --valid-distance-0: 1;
-        --color-0: var(--default-color);
+        & {
+            --mix-factor-0: 1;
+            --fresnel-0: 1;
+            --valid-distance-0: 1;
+            --color-0: var(--default-color);
+        }
 
         //
         $ray-count: 1;
@@ -149,6 +160,6 @@
         }
 
         //
-        background-color: var(--color-#{$ray-count}, #111);
+        & { background-color: var(--color-#{$ray-count}, #111); }
     }
 }
