@@ -115,7 +115,7 @@
         --color-0: var(--default-color);
 
         //
-        $ray-count: 2;
+        $ray-count: 1;
         @for $i from 1 through $ray-count {
             @include trace-ray($i);
         }
