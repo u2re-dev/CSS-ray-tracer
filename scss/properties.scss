@@ -74,60 +74,93 @@ $inf: 10000;
 }
 
 //
-@property --t-0 {
-    inherits: true;
-    syntax: "<number>";
-    initial-value: #{$inf};
+@for $i from 0 through 3 {
+    @property --t-#{$i} {
+        inherits: true;
+        syntax: "<number>";
+        initial-value: #{$inf};
+    }
+
+    @property --sphere-t-#{$i} {
+        inherits: true;
+        syntax: "<number>";
+        initial-value: #{$inf};
+    }
+
+    @property --plane-t-#{$i} {
+        inherits: true;
+        syntax: "<number>";
+        initial-value: #{$inf};
+    }
+
+    @property --is-plane-#{$i} {
+        inherits: true;
+        syntax: "<number>";
+        initial-value: 0;
+    }
+
+    @property --is-sphere-#{$i} {
+        inherits: true;
+        syntax: "<number>";
+        initial-value: 0;
+    }
+
+    @property --color-#{$i} {
+        inherits: true;
+        syntax: "<color>";
+        initial-value: transparent;
+    }
+
+    @property --it-color-#{$i} {
+        inherits: true;
+        syntax: "<color>";
+        initial-value: transparent;
+    }
+
+    @property --plane-color-#{$i} {
+        inherits: true;
+        syntax: "<color>";
+        initial-value: transparent;
+    }
+
+    @property --sphere-color-#{$i} {
+        inherits: true;
+        syntax: "<color>";
+        initial-value: transparent;
+    }
+
+    @property --shaded-color-#{$i} {
+        inherits: true;
+        syntax: "<color>";
+        initial-value: transparent;
+    }
+
+    @property --surface-color-#{$i} {
+        inherits: true;
+        syntax: "<color>";
+        initial-value: transparent;
+    }
+
+    @property --fresnel-#{$i} {
+        inherits: true;
+        syntax: "<number>";
+        initial-value: 0;
+    }
+
+    @property --mix-factor-#{$i} {
+        inherits: true;
+        syntax: "<number>";
+        initial-value: 0;
+    }
+
+    //
+    @include declare-vec3-property("ray-origin-#{$i}");
+    @include declare-vec3-property("ray-dir-#{$i}");
+    @include declare-vec3-property("sphere-normal-#{$i}");
+    @include declare-vec3-property("computed-origin-#{$i}");
+    @include declare-vec3-property("mixed-normal-#{$i}");
 }
 
-@property --sphere-t-0 {
-    inherits: true;
-    syntax: "<number>";
-    initial-value: #{$inf};
-}
-
-@property --plane-t-0 {
-    inherits: true;
-    syntax: "<number>";
-    initial-value: #{$inf};
-}
-
-//
-@property --t-1 {
-    inherits: true;
-    syntax: "<number>";
-    initial-value: #{$inf};
-}
-
-@property --t-2 {
-    inherits: true;
-    syntax: "<number>";
-    initial-value: #{$inf};
-}
-
-@property --sphere-t-1 {
-    inherits: true;
-    syntax: "<number>";
-    initial-value: #{$inf};
-}
-
-@property --sphere-t-2 {
-    inherits: true;
-    syntax: "<number>";
-    initial-value: #{$inf};
-}
-
-@property --plane-t-1 {
-    inherits: true;
-    syntax: "<number>";
-    initial-value: #{$inf};
-}
-
-@property --plane-t-2 {
-    inherits: true;
-    syntax: "<number>";
-    initial-value: #{$inf};
-}
 
 @property --sphere-radius {
     inherits: true;
@@ -142,120 +175,10 @@ $inf: 10000;
 }
 
 //
-@property --is-plane-1 {
-    inherits: true;
-    syntax: "<number>";
-    initial-value: 0;
-}
-
-@property --is-plane-2 {
-    inherits: true;
-    syntax: "<number>";
-    initial-value: 0;
-}
-
-@property --is-sphere-1 {
-    inherits: true;
-    syntax: "<number>";
-    initial-value: 0;
-}
-
-@property --is-sphere-2 {
-    inherits: true;
-    syntax: "<number>";
-    initial-value: 0;
-}
-
-//
-@property --color-0 {
-    inherits: true;
-    syntax: "<color>";
-    initial-value: transparent;
-}
-
-@property --sphere-color-0 {
-    inherits: true;
-    syntax: "<color>";
-    initial-value: transparent;
-}
-
-@property --plane-color-0 {
-    inherits: true;
-    syntax: "<color>";
-    initial-value: transparent;
-}
-
-//
-@property --color-1 {
-    inherits: true;
-    syntax: "<color>";
-    initial-value: transparent;
-}
-
-@property --color-2 {
-    inherits: true;
-    syntax: "<color>";
-    initial-value: transparent;
-}
-
-@property --it-color-1 {
-    inherits: true;
-    syntax: "<color>";
-    initial-value: transparent;
-}
-
-@property --it-color-2 {
-    inherits: true;
-    syntax: "<color>";
-    initial-value: transparent;
-}
-
-@property --plane-color-1 {
-    inherits: true;
-    syntax: "<color>";
-    initial-value: transparent;
-}
-
-@property --plane-color-2 {
-    inherits: true;
-    syntax: "<color>";
-    initial-value: transparent;
-}
-
-@property --sphere-color-1 {
-    inherits: true;
-    syntax: "<color>";
-    initial-value: transparent;
-}
-
-@property --sphere-color-2 {
-    inherits: true;
-    syntax: "<color>";
-    initial-value: transparent;
-}
-
-//
 @include declare-vec3-property("camera-origin");
 @include declare-vec3-property("camera-dir");
 @include declare-vec3-property("camera-up");
 @include declare-vec3-property("camera-right");
-
-//
-@include declare-vec3-property("ray-origin-0");
-@include declare-vec3-property("ray-origin-1");
-@include declare-vec3-property("ray-origin-2");
-@include declare-vec3-property("ray-dir-0");
-@include declare-vec3-property("ray-dir-1");
-@include declare-vec3-property("ray-dir-2");
-
-//
 @include declare-vec3-property("sphere-center");
 @include declare-vec3-property("plane-center");
 @include declare-vec3-property("plane-normal");
-
-//
-@include declare-vec3-property("sphere-normal-2");
-@include declare-vec3-property("sphere-normal-1");
-
-@include declare-vec3-property("computed-origin-1");
-@include declare-vec3-property("computed-origin-2");

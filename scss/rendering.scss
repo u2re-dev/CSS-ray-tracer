@@ -33,19 +33,44 @@
 @mixin trace-ray($i) {
     $prev-i: $i - 1;
 
+    // Potentially optimized?
     // Intersection tests
-    --sphere-t-#{$i}: #{i.sphere-intersection(
-        "sphere-center",
-        "sphere-radius",
-        "ray-origin-#{$prev-i}",
-        "ray-dir-#{$prev-i}"
-    )};
-    --plane-t-#{$i}: #{i.plane-intersection(
-        "plane-center",
-        "plane-normal",
-        "ray-origin-#{$prev-i}",
-        "ray-dir-#{$prev-i}"
-    )};
+    --sphere-t-#{$i}: if(style(--valid-distance-#{$prev-i}: 1):
+        #{i.sphere-intersection(
+            "sphere-center",
+            "sphere-radius",
+            "ray-origin-#{$prev-i}",
+            "ray-dir-#{$prev-i}"
+        )};
+        else: #{v.$inf});
+
+    --plane-t-#{$i}: if(style(--valid-distance-#{$prev-i}: 1):
+        #{i.plane-intersection(
+            "plane-center",
+            "plane-normal",
+            "ray-origin-#{$prev-i}",
+            "ray-dir-#{$prev-i}"
+        )};
+        else: #{v.$inf});
+
+/*
+    // Intersection tests
+    --sphere-t-#{$i}:
+        #{i.sphere-intersection(
+            "sphere-center",
+            "sphere-radius",
+            "ray-origin-#{$prev-i}",
+            "ray-dir-#{$prev-i}"
+        )};
+
+    --plane-t-#{$i}:
+        #{i.plane-intersection(
+            "plane-center",
+            "plane-normal",
+            "ray-origin-#{$prev-i}",
+            "ray-dir-#{$prev-i}"
+        )};
+*/
 
     //
     --t-#{$i}: min(var(--sphere-t-#{$i}, #{v.$inf}), var(--plane-t-#{$i}, #{v.$inf}));
@@ -79,7 +104,10 @@
     //
     --default-color-#{$i}: var(--default-color);
     --sphere-color-#{$i}: #ffccaa;
-    --plane-color-#{$i}: #{c.checkerboard("ray-origin-#{$i}")};
+
+    //
+    //--plane-color-#{$i}: #{c.checkerboard("ray-origin-#{$i}")};
+    --plane-color-#{$i}: if(style(--is-plane-#{$i}: 1): #{c.checkerboard("ray-origin-#{$i}")}; else: #111);
 
     //
     --surface-color-#{$i}: #{l.col-mix(var(--is-sphere-#{$i}, 0), var(--sphere-color-#{$i}, #111), var(--plane-color-#{$i}, #fff))};

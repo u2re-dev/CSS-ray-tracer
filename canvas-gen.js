@@ -27,4 +27,4 @@ const generateCSSCanvas = async (root, w, h)=>{
 }
 
 //
-generateCSSCanvas(document.querySelector(".root"), 80, 80);
+generateCSSCanvas(document.querySelector(".root"), 120, 120);
