@@ -36,7 +36,7 @@ Made before re-design of main page. In this version I'm isn't enabled any shadin
 
 <img width="240" src="./results/no-shade-v1.png" alt="v1"/>
 
-## Stress test
+## 🌡️ Stress Test 🌡️
 
 Too expensive RAM usage! And very slow rendering (roundly 1 minute to this frame)!
 
