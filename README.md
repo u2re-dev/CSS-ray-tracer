@@ -34,4 +34,12 @@ Enjoy to see scene!
 
 Made before re-design of main page. In this version I'm isn't enabled any shading.
 
-![v1](./results/no-shade-v1.png)
+<img width="240" src="./results/no-shade-v1.png" alt="v1"/>
+
+## Stress test
+
+Too expensive RAM usage! And very slow rendering (roundly 1 minute to this frame)!
+
+![SLOW](./results/max-possible-ram-madness.png)
+
+<img width="480" src="./results/ram-madness-240x.png" alt="RAM"/>
