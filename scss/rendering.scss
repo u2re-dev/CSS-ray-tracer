@@ -55,25 +55,6 @@
             else: #{v.$inf});
     }
 
-/*
-    & {
-        // Intersection tests
-        --sphere-t-#{$i}: #{i.sphere-intersection(
-            "sphere-center",
-            "sphere-radius",
-            "ray-origin-#{$prev-i}",
-            "ray-dir-#{$prev-i}"
-        )};
-
-        --plane-t-#{$i}: #{i.plane-intersection(
-            "plane-center",
-            "plane-normal",
-            "ray-origin-#{$prev-i}",
-            "ray-dir-#{$prev-i}"
-        )};
-    }
-*/
-
     & {
         --t-#{$i}: min(var(--sphere-t-#{$i}, #{v.$inf}), var(--plane-t-#{$i}, #{v.$inf}));
         --is-plane-#{$i}: #{l.eq(var(--t-#{$i}, #{v.$inf}), var(--plane-t-#{$i}, #{v.$inf}))};
@@ -140,7 +121,7 @@
 
 //
 .root {
-    .pixel {
+    & > * {
         & {
             @include m.generate-ray("camera-origin", "camera-dir", "camera-up", "camera-right", "ray-origin-0", "ray-dir-0");
         }

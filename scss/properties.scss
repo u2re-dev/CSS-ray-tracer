@@ -51,25 +51,25 @@ $inf: 10000;
 //
 @property --x {
     inherits: true;
-    syntax: "<number>";
+    syntax: "<integer>";
     initial-value: 0;
 }
 
 @property --y {
     inherits: true;
-    syntax: "<number>";
+    syntax: "<integer>";
     initial-value: 0;
 }
 
 @property --w {
     inherits: true;
-    syntax: "<number>";
+    syntax: "<integer>";
     initial-value: 1;
 }
 
 @property --h {
     inherits: true;
-    syntax: "<number>";
+    syntax: "<integer>";
     initial-value: 1;
 }
 

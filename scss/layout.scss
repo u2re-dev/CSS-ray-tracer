@@ -6,40 +6,70 @@
         transform-origin: 0px 0px;
 
         //
-        display: flex;
-        flex-direction: column;
+        display: grid;
         box-sizing: border-box;
-        will-change: transform;
+        will-change: transform, contents;
         inline-size: max-content;
         content-visibility: auto;
         contain-intrinsic-size: #{$pixel-size} #{$pixel-size};
         user-select: none; gap: 0px;
+        text-rendering: optimizeSpeed;
+        shape-rendering: optimizeSpeed;
+        image-rendering: optimizeSpeed;
+        image-rendering: pixelated;
+        background-color: black;
+        font-size: 0px;
+        line-height: 0;
 
         // enable accelerated mode
         transform: translateZ(0px);
-        //image-rendering: pixelated;
-        //image-rendering: optimizeSpeed;
+        //
 
         // additional optimize
         container-type: size; isolation: isolate;
         inline-size: calc(var(--w, 1) * $pixel-size);
         block-size: calc(var(--h, 1) * $pixel-size);
         contain: strict;
+        overflow: hidden;
+
+        //
+        grid-template-columns: repeat(var(--w, 1), 1fr);
+        grid-template-rows: repeat(var(--h, 1), 1fr);
     }
 
     //
-    .row {
-        gap: 0px;
-        content-visibility: auto;
+    &, & > * { box-sizing: border-box; line-height: 0; padding: 0; margin: 0; border: none 0px transparent; };
+    & > * {
+        content-visibility: hidden;
         contain-intrinsic-size: #{$pixel-size} #{$pixel-size};
+        transform: translateZ(0px); display: block;
+        grid-column: calc(var(--x, 1) + 1);
+        grid-row: calc(var(--y, 1) + 1);
+        will-change: background-color;
+        text-rendering: optimizeSpeed;
+        shape-rendering: optimizeSpeed;
+        image-rendering: optimizeSpeed;
+        image-rendering: pixelated;
+        font-size: 0px;
+        line-height: 0;
+
+        //
+        min-inline-size: #{$pixel-size};
+        min-block-size: #{$pixel-size};
+        max-inline-size: #{$pixel-size};
+        max-block-size: #{$pixel-size};
+
+        //
+        touch-action: none;
+        user-select: none;
+        pointer-events: none;
+        transform: translateZ(0px);
+        overflow: hidden;
+        background-repeat: no-repeat;
+        background-clip: content-box;
+
+        //
+        paint-order: fill;
+        color: transparent;
     }
-
-    //
-    &, * { box-sizing: border-box; line-height: 0; padding: 0; margin: 0; border: none 0px transparent; };
-    .pixel { content-visibility: hidden; contain-intrinsic-size: #{$pixel-size} #{$pixel-size}; };
-    * { touch-action: none; user-select: none; pointer-events: none; }
-
-    // translateZ(0px) also enabling subpixel rendering
-    .row { transform: translateZ(0px); display: flex; flex-direction: row; inline-size: 100%; block-size: min-content; max-block-size: #{$pixel-size}; /*will-change: contents;*/ container-type: inline-size; }
-    .pixel { transform: translateZ(0px); display: block; inline-size: #{$pixel-size}; block-size: #{$pixel-size}; /*will-change: contents, color, background-color; */ }
 }
