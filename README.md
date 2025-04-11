@@ -15,7 +15,7 @@ CSS math black hole, in Chrome **135** ~~137 Canary~~ (and beyond), with experim
 ## What I used?
 
 - CSS math utils and tricks
-- CSS Custom properties (**edtiable**)
+- CSS Custom properties (**editable**)
 - CSS Custom functions (**experimental**)
 - Latest CSS Math functions
 - CSS Typed OM

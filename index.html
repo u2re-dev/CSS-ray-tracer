@@ -38,6 +38,7 @@
 
         header h1 { font-size: 3rem; margin: 0; }
         header h2 { font-size: 1.5rem; margin: 10px 0; color: #ff1040; }
+        footer { line-height: 1.5; }
 
         .demo {
             margin: 20px 0;
@@ -56,6 +57,22 @@
         a { color: #eee; text-decoration: none; }
         a:hover  { color: #fff; }
         a:active { color: #fff; text-decoration: underline; }
+
+        .donation {
+            display: inline grid;
+            font-size: 0.8em;
+            block-size: max-content;
+            inline-size: max-content;
+            grid-template-rows: minmax(0px, max-content);
+            grid-template-columns: minmax(0, 80px) minmax(0px, 1fr);
+            place-content: center;
+            place-items: center;
+            text-align: start;
+            gap: 2em;
+        }
+        .donation h3 { font-size: 1em; }
+        .donation :where(p, span, a) { font-size: 0.9em; };
+        .donation img { inline-size: 80px; block-size: 80px; }
     </style>
 
     <div class="container">
@@ -70,9 +87,17 @@
         </main>
         <footer>
             <p>Works on Chrome (135 version or beyond), with enabled experimental web-platform features flags</p>
-            <p>Also, you can donate for us (Ethereum): <a href="#0x102E317665bBa4B4D2e2317Bf3c48F83FC13F4ec" onclick="(ev)=>copyToClipboard('0x102E317665bBa4B4D2e2317Bf3c48F83FC13F4ec', ev)">0x102E317665bBa4B4D2e2317Bf3c48F83FC13F4ec</a></p>
+            <p>In prior, based on CSS custom properties, `calc` and other new math functions (such as `sqrt`).</p>
             <p><a href="https://github.com/u2re-dev/CSS5-ray-tracer">Some details here (Github source code)</a></p>
-            <img width="160" src="./qr/ethereum.png" alt="ETH"/>
+            <hr/>
+            <div class="donation">
+                <img width="80" src="./qr/ethereum.png" alt="ETH"/>
+                <div class="column">
+                    <h3>Donation and sponsor</h3>
+                    <p>Also, you may consider about donate for us (Ethereum): <br/>
+                    <a href="#0x102E317665bBa4B4D2e2317Bf3c48F83FC13F4ec" onclick="(ev)=>copyToClipboard('0x102E317665bBa4B4D2e2317Bf3c48F83FC13F4ec', ev)">0x102E317665bBa4B4D2e2317Bf3c48F83FC13F4ec</a></p>
+                    </div>
+                </div>
         </footer>
     </div>
 
