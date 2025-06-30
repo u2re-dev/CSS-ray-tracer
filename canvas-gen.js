@@ -2,6 +2,7 @@ const generateCSSCanvas = async (root, w, h)=>{
     root.style.setProperty("--w", `${w}`);
     root.style.setProperty("--h", `${h}`);
     root.inert = true;
+    root.innerHTML = ``;
     for (let y = 0; y < h; y++) {
         const row = document.createDocumentFragment();
         //row.classList.add("row");
@@ -18,9 +19,11 @@ const generateCSSCanvas = async (root, w, h)=>{
             pixel.style.setProperty("--x", `${x}`);
             pixel.style.setProperty("--y", `${y}`);
             pixel.inert = true;
-            row.appendChild(pixel);
+            //row.appendChild(pixel);
+            root.appendChild(pixel);
+            await Promise.resolve();
         }
-        root.appendChild(row);
+        //root.appendChild(row);
 
         // avoid overpaint and overload when building DOM
         await new Promise((r)=>requestAnimationFrame(r));
@@ -28,4 +31,4 @@ const generateCSSCanvas = async (root, w, h)=>{
 }
 
 //
-generateCSSCanvas(document.querySelector(".root"), 120, 120);
+requestAnimationFrame(()=>requestIdleCallback(()=>generateCSSCanvas(document.querySelector(".root"), 120, 120)));
