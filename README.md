@@ -1,34 +1,55 @@
 # CSS Ray Tracer
 
-CSS math 'black hole', in Chrome/Edge **135** ~~137 Canary~~ (and beyond), with experimental flags... **pure CSS only!**
+A "black hole" ray tracer implemented **purely in CSS**—no pre-rendered images, no JavaScript for rendering, just cutting-edge CSS features!  
+Runs live in your browser using the latest Chrome/Edge (Canary or Dev) with experimental flags enabled.
 
-**Runs in browser, i.e. in runtime side! There is no pre-compiled rendering results in CSS.**
+---
 
-## Optimizations
+## Features & Optimizations
 
-- SCSS for simplify code writing
-- JS used only for generate markup (**pixel grid**)
-- Progressive (async) markup rendering (*optimization*)
-- Compiles into real CSS code
-- Used grid 120x120 elements
+- **SCSS** for easier and cleaner code management
+- **JavaScript** is used **only** to generate the pixel grid markup (no rendering logic)
+- **Progressive (async) markup rendering** for better performance
+- Compiles to standard CSS — no custom build steps required
+- Uses a **120x120 grid** for pixel representation
 
-## What I used?
+---
 
-- CSS math utils and tricks
-- CSS Custom properties (**editable**)
-- CSS Custom functions (**experimental**)
-- Latest CSS Math functions
-- CSS Typed OM
-- SCSS to simplify code-hell
+## Technologies & Techniques
 
-## How to run?
+- Advanced **CSS math utilities and tricks**
+- **CSS Custom Properties** (fully editable)
+- **CSS Custom Functions** (experimental)
+- Latest **CSS Math Functions**
+- **CSS Typed OM**
+- **SCSS** for maintainability
 
-⚠️ You needs Google Chrome Canary version, with enabled experimental web-platform features flag. ⚠️
+---
+
+## Getting Started
+
+> ⚠️ **Requires the newest version of Chrome or Edge (Canary/Dev) with Experimental Web Platform features enabled.**  
+> Make sure to enable the `chrome://flags/#enable-experimental-web-platform-features` flag.
+
+### Install 
 
 - `npm install -D`
 - `npm run dev`
 
-Enjoy to see scene!
+### AI-gen guide
+
+1. Clone or download this repository.
+2. Open `index.html` in your supported browser.
+3. Enjoy the magic of pure CSS ray tracing!
+
+---
+
+## Notes
+
+- This project is a demonstration of what’s possible with modern and experimental CSS—expect things to break as browser support evolves!
+- No pre-rendered images or JavaScript-based rendering: **all visuals are computed in real-time by CSS.** 
+
+---
 
 ## Previews
 
@@ -41,5 +62,9 @@ Made before re-design of main page. In this version I'm isn't enabled any shadin
 <img width="480" src="./results/ram-madness-240x.png" alt="RAM"/>
 
 Too expensive RAM usage! And very slow rendering (roundly 1 minute to this frame)!
+
+---
+
+**Have fun exploring the bleeding edge of CSS!**
 
 ![SLOW](./results/max-possible-ram-madness.png)
