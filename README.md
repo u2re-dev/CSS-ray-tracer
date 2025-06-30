@@ -29,6 +29,7 @@ Runs live in your browser using the latest Chrome/Edge (Canary or Dev) with expe
 ## Getting Started
 
 > ⚠️ **Requires the newest version of Chrome or Edge (Canary/Dev) with Experimental Web Platform features enabled.**  
+
 > Make sure to enable the `chrome://flags/#enable-experimental-web-platform-features` flag.
 
 ### Install 
