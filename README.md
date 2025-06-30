@@ -1,6 +1,6 @@
-# CSS Ray Tracer
+# 👾 CSS Ray Tracer 👾
 
-A "black hole" ray tracer implemented **purely in CSS**—no pre-rendered images, no JavaScript for rendering, just cutting-edge CSS features!  
+A unusual ray tracer implemented **purely in CSS** — no pre-rendered images, no JavaScript for rendering, just cutting-edge CSS features!  
 Runs live in your browser using the latest Chrome/Edge (Canary or Dev) with experimental flags enabled.
 
 ---
@@ -28,7 +28,7 @@ Runs live in your browser using the latest Chrome/Edge (Canary or Dev) with expe
 
 ## Getting Started
 
-> ⚠️ **Requires the newest version of Chrome or Edge (Canary/Dev) with Experimental Web Platform features enabled.**  
+⚠️ **Requires the newest version of Chrome or Edge (Canary/Dev) with Experimental Web Platform features enabled.**  
 
 > Make sure to enable the `chrome://flags/#enable-experimental-web-platform-features` flag.
 
@@ -37,7 +37,9 @@ Runs live in your browser using the latest Chrome/Edge (Canary or Dev) with expe
 - `npm install -D`
 - `npm run dev`
 
-### AI-gen guide
+### Naive guide
+
+> Suggested by AI
 
 1. Clone or download this repository.
 2. Open `index.html` in your supported browser.
@@ -52,25 +54,46 @@ Runs live in your browser using the latest Chrome/Edge (Canary or Dev) with expe
 
 ---
 
-## Previews
-
-Made before re-design of main page. In this version I'm isn't enabled any shading.
+## 🖼️ Previews 🖼️
 
 <details>
-  <summary>Old-Image without shading</summary>
-<img width="240" src="./results/no-shade-v1.png" alt="v1"/>
+  <summary> 📷 Old rendering without shading 📷 </summary>
+
+  Made before re-design of main page. In this version I'm isn't enabled any shading.
+
+  <img width="240" src="./results/no-shade-v1.png" alt="v1"/>
 </details>
+
+###
+
+---
 
 ## 🌡️ Stress Test 🌡️
 
 <img width="480" src="./results/ram-madness-240x.png" alt="RAM"/>
 
-**Had enabled:** reflections, two iterations level (exclude first rays), and higher resolution...
+**These options isn't included in factory box.** This test made in April of 2025 year. Currently, didn't made actual results.
 
-**As you can see:** too expensive RAM usage, and very slow rendering (roundly 1 minute to this frame)!
+**What was enabled:** 
+  - reflections
+  - two iterations level (exclude first rays) 
+  - higher pixel resolution...
 
-![SLOW](./results/max-possible-ram-madness.png)
+**As you can see:** 
+  - too expensive RAM usage
+  - roundly 1 minute to this frame
+
+###
+
+<details>
+  <summary>🖼️ <b>Result Picture</b> 🖼️</summary>
+  <img width="240" src="./results/max-possible-ram-madness.png" alt="v1"/>
+</details>
+
+###
 
 ---
+
+###
 
 **Have fun exploring the bleeding edge of CSS!**
