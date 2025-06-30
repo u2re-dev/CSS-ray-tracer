@@ -63,8 +63,8 @@ Made before re-design of main page. In this version I'm isn't enabled any shadin
 
 Too expensive RAM usage! And very slow rendering (roundly 1 minute to this frame)!
 
+![SLOW](./results/max-possible-ram-madness.png)
+
 ---
 
 **Have fun exploring the bleeding edge of CSS!**
-
-![SLOW](./results/max-possible-ram-madness.png)
