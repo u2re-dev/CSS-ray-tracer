@@ -65,7 +65,7 @@ Made before re-design of main page. In this version I'm isn't enabled any shadin
 
 <img width="480" src="./results/ram-madness-240x.png" alt="RAM"/>
 
-**Had enabled:** reflections, two iterations level (exclude first rays)...
+**Had enabled:** reflections, two iterations level (exclude first rays), and higher resolution...
 
 **As you can see:** too expensive RAM usage, and very slow rendering (roundly 1 minute to this frame)!
 
