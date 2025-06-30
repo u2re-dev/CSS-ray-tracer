@@ -1,4 +1,4 @@
-const generateCSSCanvas = async (root, w, h)=>{
+export const generateCSSCanvas = async (root, w, h)=>{
     root.style.setProperty("--w", `${w}`);
     root.style.setProperty("--h", `${h}`);
     root.inert = true;

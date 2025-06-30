@@ -44,7 +44,7 @@ A unusual ray tracer implemented **purely in CSS** — no pre-rendered images, n
 
 ⚠️ **Requires the newest version of Chrome or Edge (Canary/Dev) with Experimental Web Platform features enabled.**  
 
-> Make sure to enable the `chrome://flags/#enable-experimental-web-platform-features` flag.
+> Make sure to enable the [`chrome://flags/#enable-experimental-web-platform-features`](chrome://flags/#enable-experimental-web-platform-features) flag.
 
 ### Install 
 
