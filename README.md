@@ -49,7 +49,7 @@ Runs live in your browser using the latest Chrome/Edge (Canary or Dev) with expe
 
 ## Notes
 
-- This project is a demonstration of what’s possible with modern and experimental CSS—expect things to break as browser support evolves!
+- This project is a demonstration of what’s possible with modern and experimental CSS — expect things to break as browser support evolves!
 - No pre-rendered images or JavaScript-based rendering: **all visuals are computed in real-time by CSS.** 
 
 ---
