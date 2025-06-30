@@ -4,6 +4,21 @@ A unusual ray tracer implemented **purely in CSS** — no pre-rendered images, n
 
 ---
 
+## Single SCSS source code file
+
+**You can change and edit compilable parameters.**
+- 🎨 **[Ray-Tracing-SCSS](./unified.scss)** 🎨
+- 🖨️ [JS-DOM-Loader](./canvas-gen.js) 🖨️
+
+**Such as:**
+- Your features or fixes
+- Iteration count
+- Enable (or not) reflections
+- Possible CSS optimizations
+- Rendering resolutions
+
+---
+
 ## Features & Optimizations
 
 - **SCSS** for easier and cleaner code management
