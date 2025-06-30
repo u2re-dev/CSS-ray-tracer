@@ -2,6 +2,8 @@
 
 A unusual ray tracer implemented **purely in CSS** — no pre-rendered images, no JavaScript for rendering, just cutting-edge CSS features! Runs live in your browser using the latest Chrome/Edge (Canary or Dev) with experimental flags enabled.
 
+**Live Pre-Built Demo:** <https://codepen.io/u2re-dev/pen/emYXLLM>
+
 ---
 
 ## Single SCSS source code file
