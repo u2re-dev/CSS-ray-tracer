@@ -56,7 +56,10 @@ Runs live in your browser using the latest Chrome/Edge (Canary or Dev) with expe
 
 Made before re-design of main page. In this version I'm isn't enabled any shading.
 
+<detail>
+  <summary>Old-Image without shading</summary>
 <img width="240" src="./results/no-shade-v1.png" alt="v1"/>
+</detail>
 
 ## 🌡️ Stress Test 🌡️
 
