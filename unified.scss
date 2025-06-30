@@ -11,6 +11,9 @@ $cps: 0.0001;
 $inf: 10000;
 $pixel-size: 2px;
 
+
+
+
 /**************/
 /* LOGIC/MATH */
 /**************/
@@ -534,6 +537,11 @@ $pixel-size: 2px;
 
 
 
+
+/****************/
+/* GENERATE RAY */
+/****************/
+
 //
 @mixin generate-ray($camera-origin, $camera-view-dir, $camera-up, $camera-right, $out-ray-origin, $out-ray-dir) {
     --dx: calc(var(--x, 0) / var(--w, 0));
@@ -570,6 +578,11 @@ $pixel-size: 2px;
 }
 
 
+
+
+/****************/
+/* NEW CSS FUNC */
+/****************/
 
 // low-level
 @#{'function'} --sphere-intersection(--center-x type(<number>), --center-y type(<number>), --center-z type(<number>), --radius type(<number>), --origin-x type(<number>), --origin-y type(<number>), --origin-z type(<number>), --dir-x type(<number>), --dir-y type(<number>), --dir-z type(<number>)) returns <number> {
